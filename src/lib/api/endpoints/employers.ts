@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { fetchAPI } from "../server";
 import { buildQueryString } from "@/lib/utils/url";
 import type { PaginatedEnvelope, Envelope } from "../envelope";
@@ -20,7 +21,11 @@ export async function listEmployers(
 
 /**
  * GET /employers/:slug — get a full employer hub profile.
+ * Wrapped in React.cache so multiple calls within the same request
+ * (e.g. from layout and page) deduplicate to a single backend fetch.
  */
-export async function getEmployer(slug: string): Promise<Envelope<Employer>> {
-    return fetchAPI<Envelope<Employer>>(`/employers/${slug}`);
-}
+export const getEmployer = cache(
+    async (slug: string): Promise<Envelope<Employer>> => {
+        return fetchAPI<Envelope<Employer>>(`/employers/${slug}`);
+    },
+);

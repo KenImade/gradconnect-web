@@ -50,12 +50,9 @@ export type Employer = {
     version: number;
     created_at: string;
     updated_at: string;
-    stats: {
-        opportunity_count: number;
-        review_count: number;
-        avg_difficulty_rating: number | null;
-        avg_experience_rating: number | null;
-    };
+    review_count: number;
+    avg_difficulty_rating: number | null;
+    avg_experience_rating: number | null;
 };
 
 /** Query parameters for GET /employers */
