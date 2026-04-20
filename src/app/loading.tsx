@@ -1,10 +1,25 @@
-export default function Loading() {
+import { EmployerListSkeleton } from "@/components/employer/employer-card-skeleton";
+import { EmployerFilterBar } from "@/components/employer/employer-filter-bar";
+import { PageHeader } from "@/components/shared/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function EmployersLoading() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-text-dim flex items-center gap-3">
-        <span className="bg-primary inline-block size-2 animate-pulse rounded-full" />
-        <span className="bg-primary inline-block size-2 animate-pulse rounded-full [animation-delay:0.2s]" />
-        <span className="bg-primary inline-block size-2 animate-pulse rounded-full [animation-delay:0.4s]" />
+    <div className="container mx-auto px-4 py-12 lg:py-16">
+      <PageHeader
+        eyebrow="Employers"
+        title="Graduate employers in Nigeria"
+        description="Browse verified companies hiring graduates across banking, consulting, oil & gas, FMCG, and technology. Every profile includes assessment process details and candidate reviews."
+      />
+
+      <div className="mt-8">
+        <EmployerFilterBar />
+      </div>
+
+      <Skeleton className="mt-6 h-4 w-24" />
+
+      <div className="mt-6">
+        <EmployerListSkeleton count={6} />
       </div>
     </div>
   );
