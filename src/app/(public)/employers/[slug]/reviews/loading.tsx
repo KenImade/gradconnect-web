@@ -19,7 +19,7 @@ export default function ReviewsLoading() {
             </div>
             <div className="flex items-center justify-between">
                 <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-10 w-[220px]" />
+                <Skeleton className="h-10 w-55" />
             </div>
             <ReviewListSkeleton count={3} />
         </div>

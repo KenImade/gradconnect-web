@@ -26,7 +26,7 @@ export function ReviewsSortSelector() {
 
     return (
         <Select value={value} onValueChange={onChange}>
-            <SelectTrigger className="w-[220px]">
+            <SelectTrigger className="w-55">
                 <SelectValue />
             </SelectTrigger>
             <SelectContent>
