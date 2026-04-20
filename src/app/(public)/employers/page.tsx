@@ -5,6 +5,7 @@ import { EmployerCard } from "@/components/employer/employer-card";
 import { EmployerFilterBar } from "@/components/employer/employer-filter-bar";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
+import { Pagination } from "@/components/shared/pagination";
 import { parseEmployerFilters } from "@/lib/validation/employer-filters";
 
 export const metadata: Metadata = {
@@ -37,6 +38,12 @@ export default async function EmployersPage({ searchParams }: PageProps) {
         filters.q || filters.industry || filters.is_verified !== undefined,
     );
 
+    const totalRecords =
+        "total_records" in pagination ? pagination.total_records : employers.length;
+    const currentPage =
+        "current_page" in pagination ? pagination.current_page : 1;
+    const lastPage = "last_page" in pagination ? pagination.last_page : 1;
+
     return (
         <div className="container mx-auto px-4 py-12 lg:py-16">
             <PageHeader
@@ -50,20 +57,20 @@ export default async function EmployersPage({ searchParams }: PageProps) {
             </div>
 
             <div className="mt-6 text-body-sm text-text-dim">
-                {(() => {
-                    const count =
-                        "total_records" in pagination ? pagination.total_records : employers.length;
-                    if (count === 0) return "No results";
-                    const noun = count === 1 ? "employer" : "employers";
-                    return `${count} ${noun}${hasActiveFilters ? " match your filters" : ""}`;
-                })()}
+                {totalRecords === 0
+                    ? "No results"
+                    : `${totalRecords} ${totalRecords === 1 ? "employer" : "employers"}${hasActiveFilters ? " match your filters" : ""}`}
             </div>
 
             {employers.length === 0 ? (
                 <EmptyState
                     className="mt-8"
                     icon={Building2}
-                    title={hasActiveFilters ? "No employers match your filters" : "No employers yet"}
+                    title={
+                        hasActiveFilters
+                            ? "No employers match your filters"
+                            : "No employers yet"
+                    }
                     description={
                         hasActiveFilters
                             ? "Try removing a filter or broadening your search."
@@ -71,11 +78,19 @@ export default async function EmployersPage({ searchParams }: PageProps) {
                     }
                 />
             ) : (
-                <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {employers.map((employer) => (
-                        <EmployerCard key={employer.id} employer={employer} />
-                    ))}
-                </div>
+                <>
+                    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {employers.map((employer) => (
+                            <EmployerCard key={employer.id} employer={employer} />
+                        ))}
+                    </div>
+
+                    <Pagination
+                        className="mt-12"
+                        currentPage={currentPage}
+                        lastPage={lastPage}
+                    />
+                </>
             )}
         </div>
     );
