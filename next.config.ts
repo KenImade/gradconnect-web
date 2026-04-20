@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.gradconnect.ng",
+      },
+      // Add other origins as needed (e.g. company logos from their own domains)
+    ],
+  },
 };
 
 export default nextConfig;
