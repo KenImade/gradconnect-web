@@ -22,7 +22,6 @@
       "@/*": ["./src/*"]
     },
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
   },
