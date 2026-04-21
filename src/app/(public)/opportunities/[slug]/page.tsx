@@ -15,6 +15,7 @@ import { StatusBanner } from "@/components/opportunity/status-banner";
 import { ApplyCTA } from "@/components/opportunity/apply-cta";
 import { OpportunityCard } from "@/components/opportunity/opportunity-card";
 import { jobPostingSchema } from "@/lib/seo/job-posting-schema";
+import { BookmarkButton } from "@/components/opportunity/bookmark-button";
 
 type PageProps = {
     params: Promise<{ slug: string }>;
@@ -151,9 +152,11 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
                         deadline={opportunity.deadline}
                     />
                     <div className="flex-1" />
-                    <p className="text-caption text-text-faint">
-                        Bookmark and tracker coming in Phase 3.
-                    </p>
+                    <BookmarkButton
+                        opportunityId={opportunity.id}
+                        opportunityTitle={opportunity.title}
+                        variant="inline"
+                    />
                 </div>
 
                 {/* Two-column content */}

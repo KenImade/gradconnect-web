@@ -6,6 +6,7 @@ import { EmployerLogo } from "@/components/employer/employer-logo";
 import { StatusBadge } from "./status-badge";
 import { TypeBadge } from "./type-badge";
 import { DeadlineCountdown } from "./deadline-countdown";
+import { BookmarkButton } from "./bookmark-button";
 
 type OpportunityCardProps = {
     opportunity: Opportunity;
@@ -33,13 +34,19 @@ export function OpportunityCard({ opportunity, className }: OpportunityCardProps
                 />
 
                 <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
                         <p className="text-caption text-text-faint">
                             <span className="text-foreground font-medium">{employer.name}</span>
                             <span className="mx-1.5 text-border-strong">—</span>
                             <span className="italic">{employer.industry}</span>
                         </p>
-                        <StatusBadge status={opportunity.status} />
+                        <div className="flex items-center gap-2">
+                            <StatusBadge status={opportunity.status} />
+                            <BookmarkButton
+                                opportunityId={opportunity.id}
+                                opportunityTitle={opportunity.title}
+                            />
+                        </div>
                     </div>
 
                     <h3 className="mt-2 font-display text-heading-md text-foreground group-hover:text-primary transition-colors line-clamp-2 max-w-[52ch]">
