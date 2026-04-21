@@ -1,42 +1,19 @@
-import Link from "next/link";
+import { PublicHeader } from "@/components/layout/public-header";
+import { PublicFooter } from "@/components/layout/public-footer";
+import { getSession, requireSession } from "@/lib/auth/session";
 
-// TODO (Phase 3): implement real session guard.
-// export default async function AppLayout({ children }) {
-//   const user = await getSession();
-//   if (!user) redirect("/login");
-//   ...
-// }
+export default async function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const user = await getSession();
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-border bg-background sticky top-0 z-40 border-b">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Link href="/dashboard" className="font-display text-heading-md text-foreground">
-            GradConnect
-          </Link>
-          <div className="text-body-sm flex items-center gap-4">
-            <Link
-              href="/employers"
-              className="text-text-dim hover:text-foreground transition-colors"
-            >
-              Browse
-            </Link>
-            <Link
-              href="/dashboard"
-              className="text-foreground hover:text-primary transition-colors"
-            >
-              Dashboard
-            </Link>
-            <span className="text-text-faint">|</span>
-            <span className="text-text-dim">[Auth stub — real user menu in Phase 3]</span>
-          </div>
-        </div>
-      </header>
-
-      <div className="bg-surface-subtle flex-1">
-        <div className="container mx-auto px-4 py-8">{children}</div>
-      </div>
+      <PublicHeader user={user} />
+      <main className="flex-1">{children}</main>
+      <PublicFooter />
     </div>
   );
 }

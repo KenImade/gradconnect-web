@@ -1,47 +1,58 @@
+import "server-only";
 import { cookies } from "next/headers";
-import { env } from "@/lib/config";
+import { serverEnv } from "@/lib/config.server";
 import { APIError } from "./errors";
 
-type FetchOptions = RequestInit & {
-  next?: { revalidate?: number | false; tags?: string[] };
+type FetchAPIOptions = Omit<RequestInit, "headers"> & {
+  headers?: Record<string, string>;
 };
 
-/**
- * Server-side fetch wrapper.
- * - Forwards the session_id cookie to the Go API so authenticated requests work from Server Components
- * - Parses the backend's error envelope into a typed APIError
- * - Defaults to 60s revalidation; override per-call via options.next.revalidate
- */
-export async function fetchAPI<T>(path: string, options?: FetchOptions): Promise<T> {
+export async function fetchAPI<T>(
+  path: string,
+  options: FetchAPIOptions = {},
+): Promise<T> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session_id");
 
-  const res = await fetch(`${env.API_BASE_URL}${path}`, {
+  const res = await fetch(`${serverEnv.API_BASE_URL}${path}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...(sessionCookie ? { Cookie: `session_id=${sessionCookie.value}` } : {}),
-      ...options?.headers,
+      ...(sessionCookie
+        ? { Cookie: `session_id=${sessionCookie.value}` }
+        : {}),
+      ...options.headers,
     },
-    next: { revalidate: 60, ...options?.next },
+    cache: options.cache ?? "no-store",
   });
 
   if (!res.ok) {
-    let code = "internal_error";
+    let code = "api_error";
     let message = res.statusText;
     let details: Array<{ field: string; message: string }> | undefined;
 
     try {
       const body = await res.json();
-      code = body.error?.code ?? code;
-      message = body.error?.message ?? message;
-      details = body.error?.details;
+      // Two possible error envelopes:
+      //   { error: { code, message, details? } }  — standard
+      //   { error: "string" }                     — some backend 404s
+      if (typeof body?.error === "string") {
+        message = body.error;
+      } else if (body?.error) {
+        code = body.error.code ?? code;
+        message = body.error.message ?? message;
+        details = body.error.details;
+      }
     } catch {
-      // Non-JSON error response — keep the defaults above
+      // no JSON body, keep defaults
     }
 
     throw new APIError(res.status, code, message, details);
   }
 
-  return res.json() as Promise<T>;
+  if (res.status === 204) {
+    return undefined as T;
+  }
+
+  return res.json();
 }
