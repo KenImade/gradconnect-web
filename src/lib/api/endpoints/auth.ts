@@ -38,3 +38,37 @@ export async function resendVerificationEmail(): Promise<{ message: string }> {
         method: "POST",
     });
 }
+
+/**
+ * POST /auth/forgot-password — request a password reset email.
+ * Always returns 200 regardless of whether the email exists (enumeration-proof).
+ */
+export async function forgotPassword(input: {
+    email: string;
+}): Promise<{ message: string }> {
+    const response = await fetchAPIClient<{ data: { message: string } }>(
+        "/auth/forgot-password",
+        {
+            method: "POST",
+            body: JSON.stringify(input),
+        },
+    );
+    return response.data;
+}
+
+/**
+ * POST /auth/reset-password — validate a reset token and set a new password.
+ */
+export async function resetPassword(input: {
+    token: string;
+    new_password: string;
+}): Promise<{ message: string }> {
+    const response = await fetchAPIClient<{ data: { message: string } }>(
+        "/auth/reset-password",
+        {
+            method: "POST",
+            body: JSON.stringify(input),
+        },
+    );
+    return response.data;
+}
