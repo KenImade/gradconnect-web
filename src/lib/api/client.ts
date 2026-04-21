@@ -24,31 +24,38 @@ export async function fetchAPIClient<T>(path: string, options?: FetchOptions): P
   });
 
   if (!res.ok) {
-    let code = "internal_error";
+    let code = "api_error";
     let message = res.statusText;
     let details: Array<{ field: string; message: string }> | undefined;
 
     try {
       const body = await res.json();
-      code = body.error?.code ?? code;
-      message = body.error?.message ?? message;
-      details = body.error?.details;
-    } catch {
-      // Non-JSON error — keep defaults
-    }
 
-    const error = new APIError(res.status, code, message, details);
-
-    // Verification-gate interception: broadcast a global event that the
-    // VerificationModal listener will pick up. Caller still receives the
-    // thrown error so it can stop its own flow.
-    if (res.status === 403 && code === "email_verfification_required") {
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("gradconnect:verification-required"));
+      if (typeof body?.error === "string") {
+        // 404-style: { error: "string" }
+        message = body.error;
+      } else if (body?.error && typeof body.error === "object") {
+        if ("code" in body.error || "message" in body.error) {
+          // Structured shape: { error: { code, message, details } }
+          code = body.error.code ?? code;
+          message = body.error.message ?? message;
+          details = body.error.details;
+        } else {
+          // Field-error shape: { error: { fieldA: "msg", fieldB: "msg" } }
+          // Turn it into `details` + pick the first as message.
+          code = "validation_error";
+          const entries = Object.entries(body.error).filter(
+            ([, v]) => typeof v === "string",
+          ) as Array<[string, string]>;
+          details = entries.map(([field, msg]) => ({ field, message: msg }));
+          message = details[0]?.message ?? message;
+        }
       }
+    } catch {
+      // no JSON body, keep defaults
     }
 
-    throw error;
+    throw new APIError(res.status, code, message, details);
   }
 
   // Handle 204 No Content

@@ -33,25 +33,32 @@ export async function fetchAPI<T>(
 
     try {
       const body = await res.json();
-      // Two possible error envelopes:
-      //   { error: { code, message, details? } }  — standard
-      //   { error: "string" }                     — some backend 404s
+
       if (typeof body?.error === "string") {
+        // 404-style: { error: "string" }
         message = body.error;
-      } else if (body?.error) {
-        code = body.error.code ?? code;
-        message = body.error.message ?? message;
-        details = body.error.details;
+      } else if (body?.error && typeof body.error === "object") {
+        if ("code" in body.error || "message" in body.error) {
+          // Structured shape: { error: { code, message, details } }
+          code = body.error.code ?? code;
+          message = body.error.message ?? message;
+          details = body.error.details;
+        } else {
+          // Field-error shape: { error: { fieldA: "msg", fieldB: "msg" } }
+          // Turn it into `details` + pick the first as message.
+          code = "validation_error";
+          const entries = Object.entries(body.error).filter(
+            ([, v]) => typeof v === "string",
+          ) as Array<[string, string]>;
+          details = entries.map(([field, msg]) => ({ field, message: msg }));
+          message = details[0]?.message ?? message;
+        }
       }
     } catch {
       // no JSON body, keep defaults
     }
 
     throw new APIError(res.status, code, message, details);
-  }
-
-  if (res.status === 204) {
-    return undefined as T;
   }
 
   return res.json();
