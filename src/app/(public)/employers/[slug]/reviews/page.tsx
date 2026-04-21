@@ -89,7 +89,7 @@ export default async function EmployerReviewsPage({ params, searchParams }: Page
                         <ReviewsSortSelector />
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="border-t border-border">
                         {reviews.map((review) => (
                             <ReviewCard key={review.id} review={review} />
                         ))}

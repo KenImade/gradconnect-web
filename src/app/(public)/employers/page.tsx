@@ -79,7 +79,7 @@ export default async function EmployersPage({ searchParams }: PageProps) {
                 />
             ) : (
                 <>
-                    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="mt-6 border-t border-border">
                         {employers.map((employer) => (
                             <EmployerCard key={employer.id} employer={employer} />
                         ))}

@@ -14,53 +14,60 @@ export function EmployerCard({ employer, className }: EmployerCardProps) {
         <Link
             href={`/employers/${employer.slug}`}
             className={cn(
-                "group block rounded-lg border border-border bg-background p-6 transition-all",
-                "hover:border-border-strong hover:shadow-md",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                "group block border-b border-border py-6 transition-colors",
+                "hover:bg-surface-subtle/50",
+                "focus-visible:outline-none focus-visible:bg-surface-subtle/70",
                 className,
             )}
         >
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-5">
                 <EmployerLogo name={employer.name} logoUrl={employer.logo_url} size="md" />
 
                 <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-display text-heading-md text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                    <div className="flex items-baseline gap-2">
+                        <h3 className="font-display text-heading-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">
                             {employer.name}
                         </h3>
                         {employer.is_verified && (
                             <BadgeCheck
-                                className="size-5 shrink-0 text-primary"
+                                className="size-4 shrink-0 text-success"
                                 aria-label="Verified employer"
                             />
                         )}
                     </div>
 
                     <p className="mt-1 text-body-sm text-text-dim line-clamp-1">
-                        {employer.industry}
-                        {employer.hq_location && ` · ${employer.hq_location}`}
+                        <span className="italic">{employer.industry}</span>
+                        {employer.hq_location && ` — ${employer.hq_location}`}
                     </p>
 
                     {employer.overview && (
-                        <p className="mt-3 text-body-sm text-text-dim line-clamp-2">
+                        <p className="mt-3 text-body-sm text-text-dim line-clamp-2 max-w-prose">
                             {employer.overview}
                         </p>
                     )}
 
-                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-caption text-text-faint">
+                    <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-caption text-text-faint">
                         <span>
-                            {employer.opportunity_count}{" "}
+                            <span className="font-medium text-foreground">
+                                {employer.opportunity_count}
+                            </span>{" "}
                             {employer.opportunity_count === 1 ? "opportunity" : "opportunities"}
                         </span>
                         {employer.review_count > 0 && (
                             <span>
-                                {employer.review_count}{" "}
+                                <span className="font-medium text-foreground">
+                                    {employer.review_count}
+                                </span>{" "}
                                 {employer.review_count === 1 ? "review" : "reviews"}
                             </span>
                         )}
                         {employer.avg_experience_rating !== null && (
                             <span>
-                                {employer.avg_experience_rating.toFixed(1)}/5 experience
+                                <span className="font-medium text-foreground">
+                                    {employer.avg_experience_rating.toFixed(1)}
+                                </span>
+                                /5 experience
                             </span>
                         )}
                     </div>

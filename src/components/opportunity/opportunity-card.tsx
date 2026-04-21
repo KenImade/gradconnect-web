@@ -19,67 +19,53 @@ export function OpportunityCard({ opportunity, className }: OpportunityCardProps
         <Link
             href={`/opportunities/${opportunity.slug}`}
             className={cn(
-                "group block rounded-lg border border-border bg-background p-5 transition-all",
-                "hover:border-border-strong hover:shadow-md",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                "group block border-b border-border py-6 transition-colors",
+                "hover:bg-surface-subtle/50",
+                "focus-visible:outline-none focus-visible:bg-surface-subtle/70",
                 className,
             )}
         >
-            {/* Top row: employer stub + status badge */}
-            <div className="flex items-start justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
-                    <EmployerLogo
-                        name={employer.name}
-                        logoUrl={employer.logo_url}
-                        size="sm"
-                    />
-                    <div className="min-w-0">
-                        <p className="text-body-sm font-medium text-foreground line-clamp-1">
-                            {employer.name}
+            <div className="flex items-start gap-5">
+                <EmployerLogo
+                    name={employer.name}
+                    logoUrl={employer.logo_url}
+                    size="md"
+                />
+
+                <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        <p className="text-caption text-text-faint">
+                            <span className="text-foreground font-medium">{employer.name}</span>
+                            <span className="mx-1.5 text-border-strong">—</span>
+                            <span className="italic">{employer.industry}</span>
                         </p>
-                        <p className="text-caption text-text-faint line-clamp-1">
-                            {employer.industry}
-                        </p>
+                        <StatusBadge status={opportunity.status} />
                     </div>
-                </div>
-                <StatusBadge status={opportunity.status} />
-            </div>
 
-            {/* Title */}
-            <h3 className="mt-4 font-display text-heading-sm text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                {opportunity.title}
-            </h3>
+                    <h3 className="mt-2 font-display text-heading-md text-foreground group-hover:text-primary transition-colors line-clamp-2 max-w-[52ch]">
+                        {opportunity.title}
+                    </h3>
 
-            {/* Meta row */}
-            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                <TypeBadge type={opportunity.type} />
-                <span className="inline-flex items-center gap-1 text-caption text-text-dim">
-                    <MapPin className="size-3" />
-                    {opportunity.location}
-                </span>
-                {opportunity.status === "open" && (
-                    <DeadlineCountdown daysRemaining={opportunity.days_remaining} />
-                )}
-            </div>
-
-            {/* Discipline tags */}
-            {opportunity.discipline_tags.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                    {opportunity.discipline_tags.slice(0, 3).map((tag) => (
-                        <span
-                            key={tag}
-                            className="inline-flex items-center rounded-md bg-surface-subtle px-2 py-0.5 text-caption text-text-dim"
-                        >
-                            {tag}
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-caption">
+                        <TypeBadge type={opportunity.type} />
+                        <span className="inline-flex items-center gap-1 text-text-dim">
+                            <MapPin className="size-3" />
+                            {opportunity.location}
                         </span>
-                    ))}
-                    {opportunity.discipline_tags.length > 3 && (
-                        <span className="inline-flex items-center text-caption text-text-faint">
-                            +{opportunity.discipline_tags.length - 3} more
-                        </span>
+                        {opportunity.status === "open" && (
+                            <DeadlineCountdown daysRemaining={opportunity.days_remaining} />
+                        )}
+                    </div>
+
+                    {opportunity.discipline_tags.length > 0 && (
+                        <p className="mt-3 text-caption text-text-faint max-w-prose">
+                            {opportunity.discipline_tags.slice(0, 4).join(" · ")}
+                            {opportunity.discipline_tags.length > 4 &&
+                                ` · +${opportunity.discipline_tags.length - 4} more`}
+                        </p>
                     )}
                 </div>
-            )}
+            </div>
         </Link>
     );
 }

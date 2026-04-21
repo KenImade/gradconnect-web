@@ -8,7 +8,7 @@ type Props = {
 
 export function ReviewAggregates({ reviewCount, avgDifficulty, avgExperience }: Props) {
     return (
-        <div className="rounded-lg border border-border bg-surface-subtle p-6">
+        <div className="border-l-2 border-primary pl-6 py-2">
             <p className="font-display text-heading-md text-foreground">
                 {reviewCount}{" "}
                 {reviewCount === 1 ? "community review" : "community reviews"}

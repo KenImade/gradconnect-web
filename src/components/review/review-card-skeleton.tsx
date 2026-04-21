@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function ReviewCardSkeleton() {
     return (
-        <div className="rounded-lg border border-border bg-background p-6">
+        <div className="border-b border-border py-8">
             <div className="flex items-start justify-between gap-3">
                 <div className="space-y-2">
                     <Skeleton className="h-5 w-64" />
@@ -35,7 +35,7 @@ export function ReviewCardSkeleton() {
 
 export function ReviewListSkeleton({ count = 3 }: { count?: number }) {
     return (
-        <div className="space-y-6">
+        <div className="border-t border-border">
             {Array.from({ length: count }).map((_, i) => (
                 <ReviewCardSkeleton key={i} />
             ))}
