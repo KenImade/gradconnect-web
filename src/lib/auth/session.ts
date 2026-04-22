@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/api/endpoints/users";
+import { getCurrentUser } from "@/lib/api/endpoints/users.server";
 import type { User } from "@/lib/api/endpoints/users.types";
 
 /**

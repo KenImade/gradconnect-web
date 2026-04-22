@@ -1,17 +1,17 @@
 import { fetchAPIClient } from "../client";
-import type { User } from "./users.types";
 import type { Envelope } from "../envelope";
-
+import type { User } from "./users.types";
+import { normalize, type RawUser } from "./users.shared";
 
 export async function login(input: {
     email: string;
     password: string;
 }): Promise<User> {
-    const response = await fetchAPIClient<User>("/auth/login", {
+    const response = await fetchAPIClient<Envelope<RawUser>>("/auth/login", {
         method: "POST",
         body: JSON.stringify(input),
     });
-    return response;
+    return normalize(response.data);
 }
 
 export async function register(input: {
@@ -20,11 +20,11 @@ export async function register(input: {
     first_name: string;
     last_name: string;
 }): Promise<User> {
-    const response = await fetchAPIClient<User>("/auth/register", {
+    const response = await fetchAPIClient<Envelope<RawUser>>("/auth/register", {
         method: "POST",
         body: JSON.stringify(input),
     });
-    return response;
+    return normalize(response.data);
 }
 
 export async function logout(): Promise<void> {
@@ -39,10 +39,6 @@ export async function resendVerificationEmail(): Promise<{ message: string }> {
     });
 }
 
-/**
- * POST /auth/forgot-password — request a password reset email.
- * Always returns 200 regardless of whether the email exists (enumeration-proof).
- */
 export async function forgotPassword(input: {
     email: string;
 }): Promise<{ message: string }> {
@@ -56,9 +52,6 @@ export async function forgotPassword(input: {
     return response.data;
 }
 
-/**
- * POST /auth/reset-password — validate a reset token and set a new password.
- */
 export async function resetPassword(input: {
     token: string;
     new_password: string;

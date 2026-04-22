@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Bookmark, Compass } from "lucide-react";
-import { requireSession, requireVerifiedSession } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
 import { listBookmarks } from "@/lib/api/endpoints/bookmarks.server";
 import { ShortlistList } from "@/components/opportunity/shortlist-list";
 import { EmptyState } from "@/components/shared/empty-state";
