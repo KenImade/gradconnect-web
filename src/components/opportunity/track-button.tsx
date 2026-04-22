@@ -1,11 +1,11 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
-import { Bookmark, BookmarkCheck, Loader2 } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { Loader2, ListPlus, ListChecks } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useBookmarks } from "@/lib/hooks/use-bookmarks";
+import { useTracker } from "@/lib/hooks/use-tracker";
 import { APIError } from "@/lib/api/errors";
 import {
     Tooltip,
@@ -13,33 +13,33 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-type BookmarkButtonProps = {
+type TrackButtonProps = {
     opportunityId: string;
     opportunityTitle: string;
     variant?: "icon" | "inline";
     className?: string;
 };
 
-export function BookmarkButton({
+export function TrackButton({
     opportunityId,
     opportunityTitle,
     variant = "icon",
     className,
-}: BookmarkButtonProps) {
+}: TrackButtonProps) {
     const router = useRouter();
     const pathname = usePathname();
-    const { user, isBookmarked, toggle, isVerified } = useBookmarks();
+    const { user, isTracked, toggle, isVerified } = useTracker();
     const [isBusy, setIsBusy] = useState(false);
 
-    const bookmarked = isBookmarked(opportunityId);
+    const tracked = isTracked(opportunityId);
 
     async function handleClick(e: React.MouseEvent) {
         e.preventDefault();
         e.stopPropagation();
 
         if (!user) {
-            toast.info("Sign in to save opportunities to your shortlist.", {
-                description: "Your shortlist travels with you across devices.",
+            toast.info("Sign in to track your applications.", {
+                description: "Watch your pipeline from 'Interested' through to 'Offer.'",
                 action: {
                     label: "Sign in",
                     onClick: () =>
@@ -50,7 +50,7 @@ export function BookmarkButton({
         }
 
         if (!isVerified) {
-            toast.warning("Verify your email to save opportunities.", {
+            toast.warning("Verify your email to track applications.", {
                 description: "Check your dashboard for the verification link.",
                 action: {
                     label: "Go to dashboard",
@@ -64,25 +64,31 @@ export function BookmarkButton({
         setIsBusy(true);
 
         try {
-            const nowBookmarked = await toggle(opportunityId);
-            toast.success(
-                nowBookmarked
-                    ? `Saved "${truncate(opportunityTitle, 60)}"`
-                    : "Removed from shortlist",
-            );
+            const nowTracked = await toggle(opportunityId);
+            if (nowTracked) {
+                toast.success(`Added "${truncate(opportunityTitle, 50)}" to tracker`, {
+                    description: "Drag it through columns as your application progresses.",
+                    action: {
+                        label: "Open tracker",
+                        onClick: () => router.push("/tracker"),
+                    },
+                });
+            } else {
+                toast.success("Removed from tracker");
+            }
         } catch (err) {
             if (APIError.isAPIError(err) && err.status === 403) {
-                toast.error("Verify your email to save opportunities.");
+                toast.error("Verify your email to track applications.");
             } else {
-                toast.error("Couldn't update shortlist. Try again.");
+                toast.error("Couldn't update tracker. Try again.");
             }
         } finally {
             setIsBusy(false);
         }
     }
 
-    const label = bookmarked ? "Remove from shortlist" : "Save to shortlist";
-    const Icon = bookmarked ? BookmarkCheck : Bookmark;
+    const label = tracked ? "Remove from tracker" : "Add to tracker";
+    const Icon = tracked ? ListChecks : ListPlus;
 
     if (variant === "icon") {
         return (
@@ -93,22 +99,20 @@ export function BookmarkButton({
                         onClick={handleClick}
                         disabled={isBusy}
                         aria-label={label}
-                        aria-pressed={bookmarked}
+                        aria-pressed={tracked}
                         className={cn(
                             "inline-flex items-center justify-center size-9 rounded-md transition-colors",
                             "hover:bg-surface-subtle",
                             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
                             "disabled:opacity-60 disabled:cursor-not-allowed",
-                            bookmarked && "text-primary",
+                            tracked && "text-primary",
                             className,
                         )}
                     >
                         {isBusy ? (
                             <Loader2 className="size-4 animate-spin" />
                         ) : (
-                            <Icon
-                                className={cn("size-4", bookmarked && "fill-current")}
-                            />
+                            <Icon className="size-4" />
                         )}
                     </button>
                 </TooltipTrigger>
@@ -124,10 +128,10 @@ export function BookmarkButton({
             type="button"
             onClick={handleClick}
             disabled={isBusy}
-            aria-pressed={bookmarked}
+            aria-pressed={tracked}
             className={cn(
                 "inline-flex items-center gap-2 rounded-md border px-4 py-2 text-body-sm font-medium transition-colors",
-                bookmarked
+                tracked
                     ? "border-primary bg-primary/5 text-primary hover:bg-primary/10"
                     : "border-border-strong bg-transparent text-foreground hover:bg-surface-subtle",
                 "disabled:opacity-60 disabled:cursor-not-allowed",
@@ -137,9 +141,9 @@ export function BookmarkButton({
             {isBusy ? (
                 <Loader2 className="size-4 animate-spin" />
             ) : (
-                <Icon className={cn("size-4", bookmarked && "fill-current")} />
+                <Icon className="size-4" />
             )}
-            {bookmarked ? "Saved" : "Save"}
+            {tracked ? "Tracking" : "Track"}
         </button>
     );
 }

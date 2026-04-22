@@ -7,6 +7,7 @@ import { StatusBadge } from "./status-badge";
 import { TypeBadge } from "./type-badge";
 import { DeadlineCountdown } from "./deadline-countdown";
 import { BookmarkButton } from "./bookmark-button";
+import { TrackButton } from "./track-button";
 
 type OpportunityCardProps = {
     opportunity: Opportunity;
@@ -40,9 +41,13 @@ export function OpportunityCard({ opportunity, className }: OpportunityCardProps
                             <span className="mx-1.5 text-border-strong">—</span>
                             <span className="italic">{employer.industry}</span>
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                             <StatusBadge status={opportunity.status} />
                             <BookmarkButton
+                                opportunityId={opportunity.id}
+                                opportunityTitle={opportunity.title}
+                            />
+                            <TrackButton
                                 opportunityId={opportunity.id}
                                 opportunityTitle={opportunity.title}
                             />

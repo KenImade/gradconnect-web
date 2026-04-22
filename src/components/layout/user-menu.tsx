@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LogOut, LayoutDashboard, Bookmark, Settings } from "lucide-react";
+import { ClipboardList, LogOut, LayoutDashboard, Bookmark, Settings } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -64,6 +64,12 @@ export function UserMenu({ user }: { user: User }) {
                     <Link href="/shortlist" className="cursor-pointer">
                         <Bookmark className="mr-2 size-4" />
                         Shortlist
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href="/tracker" className="cursor-pointer">
+                        <ClipboardList className="mr-2 size-4" />
+                        Tracker
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>

@@ -16,6 +16,7 @@ import { ApplyCTA } from "@/components/opportunity/apply-cta";
 import { OpportunityCard } from "@/components/opportunity/opportunity-card";
 import { jobPostingSchema } from "@/lib/seo/job-posting-schema";
 import { BookmarkButton } from "@/components/opportunity/bookmark-button";
+import { TrackButton } from "@/components/opportunity/track-button";
 
 type PageProps = {
     params: Promise<{ slug: string }>;
@@ -153,6 +154,11 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
                     />
                     <div className="flex-1" />
                     <BookmarkButton
+                        opportunityId={opportunity.id}
+                        opportunityTitle={opportunity.title}
+                        variant="inline"
+                    />
+                    <TrackButton
                         opportunityId={opportunity.id}
                         opportunityTitle={opportunity.title}
                         variant="inline"

@@ -8,7 +8,11 @@ export function OpportunityCardSkeleton() {
                 <div className="min-w-0 flex-1 space-y-3">
                     <div className="flex items-center justify-between">
                         <Skeleton className="h-3 w-40" />
-                        <Skeleton className="h-5 w-14 rounded-full" />
+                        <div className="flex items-center gap-1">
+                            <Skeleton className="h-5 w-14 rounded-full" />
+                            <Skeleton className="size-9 rounded-md" />
+                            <Skeleton className="size-9 rounded-md" />
+                        </div>
                     </div>
                     <Skeleton className="h-6 w-3/4 max-w-[52ch]" />
                     <div className="flex gap-3">
