@@ -4,6 +4,19 @@ import { getSession } from "@/lib/auth/session";
 import { BookmarksProvider } from "@/lib/hooks/use-bookmarks";
 import { TrackerProvider } from "@/lib/hooks/use-tracker";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "GradConnect — Nigeria's graduate career intelligence platform",
+  description:
+    "Discover verified graduate employers, understand their assessment processes, and prepare to apply. Built for Nigerian graduates.",
+  openGraph: {
+    title: "GradConnect — Nigeria's graduate career platform",
+    description:
+      "Discover verified graduate employers, understand their assessment processes, and prepare to apply.",
+    type: "website",
+  },
+};
 
 export default async function PublicLayout({
   children,
