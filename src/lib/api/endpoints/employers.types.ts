@@ -32,7 +32,7 @@ export type EmployerSummary = {
     review_count: number;
 };
 
-/** Returned by GET /employers/:slug (full profile) */
+/** Returned by GET /employers/:slug and GET /admin/employers/:id (full profile) */
 export type Employer = {
     id: string;
     name: string;
