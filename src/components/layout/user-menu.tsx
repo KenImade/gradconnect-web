@@ -12,6 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Shield } from "lucide-react";
 import { logout } from "@/lib/api/endpoints/auth";
 import { getInitials } from "@/lib/utils/text";
 import type { User } from "@/lib/api/endpoints/users.types";
@@ -54,6 +55,17 @@ export function UserMenu({ user }: { user: User }) {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                {user.permissions.includes("admin:full") && (
+                    <>
+                        <DropdownMenuItem asChild>
+                            <Link href="/admin/moderation" className="cursor-pointer">
+                                <Shield className="mr-2 size-4" />
+                                Admin
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                    </>
+                )}
                 <DropdownMenuItem asChild>
                     <Link href="/dashboard" className="cursor-pointer">
                         <LayoutDashboard className="mr-2 size-4" />

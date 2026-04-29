@@ -1,0 +1,33 @@
+/* Admin-scoped tokens — overlays the public design system within the (admin) tree.
+ * The data-admin attribute on <body> scopes these so they don't leak.
+ *
+ * Public site uses warm cream backgrounds and full Fraunces; admin uses
+ * a near-paper white with Fraunces only on page headers, system font
+ * for everything else, and tighter density.
+ */
+.admin-root {
+    /* Slightly cooler off-white — distinct from the public cream. */
+    --color-admin-background: oklch(0.985 0.005 90);
+    --color-admin-surface: #ffffff;
+    --color-admin-surface-subtle: oklch(0.97 0.005 90);
+
+    --color-admin-foreground: oklch(0.20 0.012 50);
+    --color-admin-text-dim: oklch(0.42 0.012 50);
+    --color-admin-text-faint: oklch(0.60 0.008 50);
+
+    --color-admin-border: oklch(0.90 0.005 80);
+    --color-admin-border-strong: oklch(0.78 0.008 80);
+}
+
+/* Tailwind 4 reads CSS variables via theme(). These exposed names lets
+ * us write `bg-admin-background` etc. in our admin components. */
+@theme {
+    --color-admin-background: var(--color-admin-background);
+    --color-admin-surface: var(--color-admin-surface);
+    --color-admin-surface-subtle: var(--color-admin-surface-subtle);
+    --color-admin-foreground: var(--color-admin-foreground);
+    --color-admin-text-dim: var(--color-admin-text-dim);
+    --color-admin-text-faint: var(--color-admin-text-faint);
+    --color-admin-border: var(--color-admin-border);
+    --color-admin-border-strong: var(--color-admin-border-strong);
+}
