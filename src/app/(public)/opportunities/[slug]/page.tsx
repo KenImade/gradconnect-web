@@ -189,7 +189,7 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
                             </section>
                         )}
 
-                        {opportunity.discipline_tags.length > 0 && (
+                        {opportunity.discipline_tags?.length > 0 && (
                             <section>
                                 <h2 className="font-display text-heading-xl text-foreground">
                                     Disciplines

@@ -6,9 +6,9 @@ export const opportunityFiltersSchema = z.object({
         .enum(["graduate_trainee", "internship", "nysc", "industrial_attachment"])
         .optional(),
     status: z
-        .enum(["upcoming", "open", "closed", "withdrawn", "all"])
+        .enum(["open", "upcoming", "open_or_upcoming"])
         .optional()
-        .default("open"),
+        .default("open_or_upcoming"),
     intake_year: z.coerce.number().int().optional(),
     industry: z.string().optional(),
     location: z.string().optional(),

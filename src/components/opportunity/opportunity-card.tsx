@@ -36,11 +36,13 @@ export function OpportunityCard({ opportunity, className }: OpportunityCardProps
 
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
-                        <p className="text-caption text-text-faint">
-                            <span className="text-foreground font-medium">{employer.name}</span>
-                            <span className="mx-1.5 text-border-strong">—</span>
-                            <span className="italic">{employer.industry}</span>
+                        <p className="font-display text-heading-sm text-text-dim">
+                            {employer.name}
+                            <span className="ml-2 text-caption text-text-faint italic font-sans">
+                                — {employer.industry}
+                            </span>
                         </p>
+
                         <div className="flex items-center gap-1">
                             <StatusBadge status={opportunity.status} />
                             <BookmarkButton
@@ -54,7 +56,7 @@ export function OpportunityCard({ opportunity, className }: OpportunityCardProps
                         </div>
                     </div>
 
-                    <h3 className="mt-2 font-display text-heading-md text-foreground group-hover:text-primary transition-colors line-clamp-2 max-w-[52ch]">
+                    <h3 className="mt-1 font-display text-heading-md text-foreground group-hover:text-primary transition-colors line-clamp-2 max-w-[52ch]">
                         {opportunity.title}
                     </h3>
 
@@ -69,7 +71,7 @@ export function OpportunityCard({ opportunity, className }: OpportunityCardProps
                         )}
                     </div>
 
-                    {opportunity.discipline_tags.length > 0 && (
+                    {opportunity.discipline_tags?.length > 0 && (
                         <p className="mt-3 text-caption text-text-faint max-w-prose">
                             {opportunity.discipline_tags.slice(0, 4).join(" · ")}
                             {opportunity.discipline_tags.length > 4 &&
