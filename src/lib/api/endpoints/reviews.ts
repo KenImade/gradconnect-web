@@ -1,17 +1,23 @@
-import { fetchAPI } from "../server";
-import { buildQueryString } from "@/lib/utils/url";
-import type { PaginatedEnvelope } from "../envelope";
-import type { Review, ListReviewsParams } from "./reviews.types";
+import { fetchAPIClient } from "../client";
+import type { Envelope } from "../envelope";
+import type {
+    ReviewSubmissionResult,
+    SubmitReviewInput,
+} from "./reviews.types";
 
 /**
- * GET /employers/:slug/reviews — list approved reviews for an employer.
+ * POST /reviews — submit a new review.
+ * Returns a minimal stub; the review enters moderation (status: pending).
  */
-export async function listEmployerReviews(
-    slug: string,
-    params: ListReviewsParams = {},
-): Promise<PaginatedEnvelope<Review[]>> {
-    const qs = buildQueryString(params);
-    return fetchAPI<PaginatedEnvelope<Review[]>>(
-        `/employers/${slug}/reviews${qs}`,
+export async function submitReview(
+    input: SubmitReviewInput,
+): Promise<ReviewSubmissionResult> {
+    const response = await fetchAPIClient<Envelope<ReviewSubmissionResult>>(
+        "/reviews",
+        {
+            method: "POST",
+            body: JSON.stringify(input),
+        },
     );
+    return response.data;
 }

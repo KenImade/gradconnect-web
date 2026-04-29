@@ -5,10 +5,13 @@
 
 export type ReviewOutcome = "offer" | "waitlisted" | "rejected" | "withdrew";
 
+export type ReviewStatus = "pending" | "approved" | "rejected";
+
 export type ReviewStage = {
     stage_name: string;
-    description: string;
+    description?: string;
     tips?: string;
+    order: number;
 };
 
 export type Review = {
@@ -34,4 +37,32 @@ export type ListReviewsParams = {
     order?: "asc" | "desc";
     page?: number;
     page_size?: number;
+};
+
+/**
+ * Minimal shape returned from POST /reviews on success.
+ */
+export type ReviewSubmissionResult = {
+    id: string;
+    employer_id: string;
+    programme_name: string;
+    status: ReviewStatus;
+    created_at: string;
+};
+
+/**
+ * Input for POST /reviews. Shape must match backend exactly —
+ * unknown keys produce a 400.
+ */
+export type SubmitReviewInput = {
+    employer_id: string;
+    programme_name: string;
+    application_year: number;
+    outcome: ReviewOutcome;
+    stage_breakdown: ReviewStage[];
+    difficulty_rating: number;
+    experience_rating: number;
+    tips?: string;
+    degree_discipline?: string;
+    university?: string;
 };

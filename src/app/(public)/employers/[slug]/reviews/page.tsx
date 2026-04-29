@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MessageSquare } from "lucide-react";
-import { getEmployer } from "@/lib/api/endpoints/employers";
-import { listEmployerReviews } from "@/lib/api/endpoints/reviews";
+import Link from "next/link";
+import { MessageSquare, MessageSquarePlus } from "lucide-react";
+import { getEmployer } from "@/lib/api/endpoints/employers.server";
+import { listEmployerReviews } from "@/lib/api/endpoints/reviews.server";
 import { APIError } from "@/lib/api/errors";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Pagination } from "@/components/shared/pagination";
 import { ReviewCard } from "@/components/review/review-card";
 import { ReviewAggregates } from "@/components/review/review-aggregates";
 import { ReviewsSortSelector } from "@/components/review/reviews-sort-selector";
+import { getSession } from "@/lib/auth/session";
 
 type PageProps = {
     params: Promise<{ slug: string }>;
@@ -60,6 +62,9 @@ export default async function EmployerReviewsPage({ params, searchParams }: Page
         page_size: 10,
     });
 
+    const user = await getSession();
+    const canReview = user?.email_verified && user.permissions.includes("review:submit");
+
     const totalRecords =
         "total_records" in pagination ? pagination.total_records : reviews.length;
     const currentPage =
@@ -68,6 +73,26 @@ export default async function EmployerReviewsPage({ params, searchParams }: Page
 
     return (
         <div className="space-y-8">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                    <h1 className="font-display text-display-md text-foreground">
+                        Candidate reviews
+                    </h1>
+                    <p className="mt-2 text-body-md text-text-dim max-w-prose">
+                        First-hand accounts from candidates who&apos;ve been through {employer.name}&apos;s process.
+                    </p>
+                </div>
+                {canReview && (
+                    <Link
+                        href={`/reviews/new?employer=${employer.slug}`}
+                        className="inline-flex items-center gap-2 rounded-md border border-primary bg-primary/5 px-4 py-2 text-body-sm font-medium text-primary hover:bg-primary/10 transition-colors"
+                    >
+                        <MessageSquarePlus className="size-4" />
+                        Share your experience
+                    </Link>
+                )}
+            </div>
+
             <ReviewAggregates
                 reviewCount={employer.review_count}
                 avgDifficulty={employer.avg_difficulty_rating}
@@ -79,6 +104,28 @@ export default async function EmployerReviewsPage({ params, searchParams }: Page
                     icon={MessageSquare}
                     title="No reviews yet"
                     description={`Be the first to share your experience applying to ${employer.name}.`}
+                    action={
+                        canReview ? (
+                            <Link
+                                href={`/reviews/new?employer=${employer.slug}`}
+                                className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-body-sm font-medium text-primary-foreground hover:bg-primary-hover transition-colors"
+                            >
+                                <MessageSquarePlus className="size-4" />
+                                Share your experience
+                            </Link>
+                        ) : !user ? (
+                            <Link
+                                href={`/login?redirect=${encodeURIComponent(`/employers/${employer.slug}/reviews`)}`}
+                                className="inline-flex items-center rounded-md bg-primary px-5 py-2.5 text-body-sm font-medium text-primary-foreground hover:bg-primary-hover transition-colors"
+                            >
+                                Sign in to contribute
+                            </Link>
+                        ) : !user.email_verified ? (
+                            <p className="text-caption text-text-dim italic">
+                                Verify your email to submit reviews.
+                            </p>
+                        ) : null
+                    }
                 />
             ) : (
                 <>

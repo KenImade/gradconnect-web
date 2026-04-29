@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getEmployer } from "@/lib/api/endpoints/employers";
+import { getEmployer } from "@/lib/api/endpoints/employers.server";
 import { APIError } from "@/lib/api/errors";
 import { EmployerHubHeader } from "@/components/employer/employer-hub-header";
 import { EmployerHubTabs } from "@/components/employer/employer-hub-tabs";

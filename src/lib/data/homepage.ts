@@ -1,6 +1,6 @@
-import { listEmployers } from "@/lib/api/endpoints/employers";
+import { listEmployers } from "../api/endpoints/employers.server";
 import { listOpportunities } from "@/lib/api/endpoints/opportunities";
-import { listEmployerReviews } from "@/lib/api/endpoints/reviews";
+import { listEmployerReviews } from "../api/endpoints/reviews.server";
 import type { EmployerSummary } from "@/lib/api/endpoints/employers.types";
 import type { Opportunity } from "@/lib/api/endpoints/opportunities.types";
 import type { Review } from "@/lib/api/endpoints/reviews.types";

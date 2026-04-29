@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Building2 } from "lucide-react";
-import { listEmployers } from "@/lib/api/endpoints/employers";
+import { listEmployers } from "@/lib/api/endpoints/employers.server";
 import { EmployerCard } from "@/components/employer/employer-card";
 import { EmployerFilterBar } from "@/components/employer/employer-filter-bar";
 import { EmptyState } from "@/components/shared/empty-state";

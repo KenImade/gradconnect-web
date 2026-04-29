@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { FileText, Clock, ClipboardCheck, MessageSquare } from "lucide-react";
-import { getEmployer } from "@/lib/api/endpoints/employers";
+import { getEmployer } from "@/lib/api/endpoints/employers.server";
 import { listEmployerAssessments } from "@/lib/api/endpoints/assessments";
 import { APIError } from "@/lib/api/errors";
 import { EmptyState } from "@/components/shared/empty-state";

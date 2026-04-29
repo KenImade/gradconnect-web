@@ -1,13 +1,12 @@
-import { fetchAPIClient } from "../client";
-import type { PaginatedEnvelope } from "../envelope";
+import "server-only";
+import { fetchAPI } from "../server";
+import type { Envelope, PaginatedEnvelope } from "../envelope";
 import type {
     EmployerSummary,
     ListEmployersParams,
+    Employer
 } from "./employers.types";
 
-/**
- * Client-side employer search for the EmployerPicker component.
- */
 export async function listEmployers(
     params?: ListEmployersParams,
 ): Promise<PaginatedEnvelope<EmployerSummary[]>> {
@@ -23,5 +22,11 @@ export async function listEmployers(
     if (params?.page_size) qs.set("page_size", String(params.page_size));
 
     const path = qs.toString() ? `/employers?${qs}` : "/employers";
-    return fetchAPIClient<PaginatedEnvelope<EmployerSummary[]>>(path);
+    return fetchAPI<PaginatedEnvelope<EmployerSummary[]>>(path);
+}
+
+export async function getEmployer(
+    slug: string,
+): Promise<Envelope<Employer>> {
+    return fetchAPI<Envelope<Employer>>(`/employers/${slug}`);
 }

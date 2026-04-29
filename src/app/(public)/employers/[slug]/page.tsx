@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
-import { getEmployer } from "@/lib/api/endpoints/employers";
+import { getEmployer } from "@/lib/api/endpoints/employers.server";
 import { APIError } from "@/lib/api/errors";
 
 type PageProps = {
