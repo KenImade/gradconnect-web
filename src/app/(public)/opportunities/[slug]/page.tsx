@@ -5,7 +5,6 @@ import { Calendar, MapPin, ExternalLink, FileText } from "lucide-react";
 import { getOpportunity } from "@/lib/api/endpoints/opportunities";
 import { getRelatedOpportunities } from "@/lib/api/endpoints/opportunities.helpers";
 import { APIError } from "@/lib/api/errors";
-import { env } from "@/lib/config";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { EmployerLogo } from "@/components/employer/employer-logo";
 import { StatusBadge } from "@/components/opportunity/status-badge";
@@ -14,18 +13,18 @@ import { DeadlineCountdown } from "@/components/opportunity/deadline-countdown";
 import { StatusBanner } from "@/components/opportunity/status-banner";
 import { ApplyCTA } from "@/components/opportunity/apply-cta";
 import { OpportunityCard } from "@/components/opportunity/opportunity-card";
-import { jobPostingSchema } from "@/lib/seo/job-posting-schema";
+import {
+    opportunityJobPostingSchema,
+    breadcrumbSchema,
+} from "@/lib/seo/structured-data";
+import { JsonLd } from "@/components/shared/json-ld"
 import { BookmarkButton } from "@/components/opportunity/bookmark-button";
 import { TrackButton } from "@/components/opportunity/track-button";
+import { SITE, absoluteUrl } from "@/lib/seo/config";
 
 type PageProps = {
     params: Promise<{ slug: string }>;
 };
-
-function truncate(s: string, max: number): string {
-    if (s.length <= max) return s;
-    return s.slice(0, max - 1).trimEnd() + "…";
-}
 
 function formatDate(iso: string | null): string {
     if (!iso) return "—";
@@ -36,27 +35,51 @@ function formatDate(iso: string | null): string {
     });
 }
 
-export async function generateMetadata({
-    params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
+    let opportunity;
     try {
-        const { data: o } = await getOpportunity(slug);
-        return {
-            title: `${o.title} at ${o.employer.name}`,
-            description: truncate(o.description, 160),
-            alternates: { canonical: `/opportunities/${o.slug}` },
-            openGraph: {
-                title: `${o.title} — ${o.employer.name}`,
-                description: truncate(o.description, 160),
-                type: "article",
-                url: `/opportunities/${o.slug}`,
-            },
-            twitter: { card: "summary_large_image" },
-        };
+        const result = await getOpportunity(slug);
+        opportunity = result.data;
     } catch {
         return { title: "Opportunity not found" };
     }
+
+    const title = `${opportunity.title} at ${opportunity.employer.name}`;
+    const description =
+        opportunity.description.length > 160
+            ? opportunity.description.slice(0, 160).trim() + "…"
+            : opportunity.description;
+    const url = absoluteUrl(`/opportunities/${opportunity.slug}`);
+
+    return {
+        title,
+        description,
+        alternates: { canonical: url },
+        openGraph: {
+            type: "article",
+            url,
+            title,
+            description,
+            siteName: SITE.name,
+            locale: SITE.locale,
+            images: [
+                {
+                    url: absoluteUrl(`/api/og/opportunity/${opportunity.slug}`),
+                    width: 1200,
+                    height: 630,
+                    alt: title,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            site: SITE.twitter,
+            images: [absoluteUrl(`/api/og/opportunity/${opportunity.slug}`)],
+        },
+    };
 }
 
 export default async function OpportunityDetailPage({ params }: PageProps) {
@@ -72,14 +95,19 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
     }
 
     const related = await getRelatedOpportunities(opportunity);
-    const jsonLd = jobPostingSchema(opportunity, env.NEXT_PUBLIC_SITE_URL);
+    const jobPosting = opportunityJobPostingSchema(opportunity);
+    const breadcrumbs = breadcrumbSchema([
+        { name: "Home", url: absoluteUrl("/") },
+        { name: "Opportunities", url: absoluteUrl("/opportunities") },
+        {
+            name: opportunity.title,
+            url: absoluteUrl(`/opportunities/${opportunity.slug}`),
+        },
+    ]);
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JsonLd data={[jobPosting, breadcrumbs]} />
 
             <div className="container mx-auto px-4 py-8 lg:py-12">
                 <Breadcrumbs

@@ -30,13 +30,27 @@ type Props = {
     initial?: Assessment;
 };
 
+const KNOWN_STAGE_TYPES = ["form", "test", "interview", "assessment", "other"] as const;
+type KnownStageType = (typeof KNOWN_STAGE_TYPES)[number];
+
+function isKnownStageType(value: string): value is KnownStageType {
+    return (KNOWN_STAGE_TYPES as readonly string[]).includes(value);
+}
+
 function defaultsFromAssessment(a?: Assessment): AssessmentFormInput {
     return {
         employer_id: a?.employer.id ?? "",
         programme_type: a?.programme_type ?? "",
-        stages: a?.stages ?? [
-            { order: 1, stage_name: "", stage_type: "form" as const, description: "" },
-        ],
+        stages: a?.stages
+            ? a.stages.map((stage) => ({
+                order: stage.order,
+                stage_name: stage.stage_name,
+                stage_type: isKnownStageType(stage.stage_type) ? stage.stage_type : "other",
+                description: stage.description ?? "",
+            }))
+            : [
+                { order: 1, stage_name: "", stage_type: "form", description: "" },
+            ],
         aptitude_test_provider: a?.aptitude_test_provider ?? "",
         interview_format: a?.interview_format ?? "",
         timeline_weeks: a?.timeline_weeks ? String(a.timeline_weeks) : "",
@@ -106,7 +120,7 @@ export function AssessmentForm({ initial }: Props) {
                         // Backend returns nested errors like "stages[0].stage_name"
                         // RHF accepts dot-paths. Normalize the bracket syntax.
                         const normalized = field.replace(/\[(\d+)\]/g, ".$1");
-                        form.setError(normalized as any, {
+                        form.setError(normalized as Parameters<typeof form.setError>[0], {
                             type: "server",
                             message: String(msg),
                         });
@@ -317,7 +331,7 @@ export function AssessmentForm({ initial }: Props) {
                         id="prep_guide"
                         rows={12}
                         placeholder={`## How to prepare\n\nStart with practice questions from the official provider…`}
-                        className="w-full rounded border border-admin-border bg-admin-surface px-3 py-2 text-body-md font-mono focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/30 resize-y min-h-[260px]"
+                        className="w-full rounded border border-admin-border bg-admin-surface px-3 py-2 text-body-md font-mono focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/30 resize-y min-h-65"
                     />
                     {errors.prep_guide && (
                         <p className="mt-1 text-caption text-destructive">

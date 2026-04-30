@@ -2,46 +2,67 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { AlertCircle } from "lucide-react";
+import { ArrowRight, RefreshCw } from "lucide-react";
 
-export default function GlobalError({
-  error,
-  reset,
-}: {
+type Props = {
   error: Error & { digest?: string };
   reset: () => void;
-}) {
+};
+
+export default function GlobalError({ error, reset }: Props) {
   useEffect(() => {
-    // TODO (Phase 5): Sentry.captureException(error)
-    console.error("Error boundary caught:", error);
+    // Log to console in dev; eventually send to Sentry
+    console.error("Public error boundary caught:", error);
   }, [error]);
 
+  const isDev = process.env.NODE_ENV !== "production";
+
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="max-w-md text-center">
-        <div className="bg-destructive/10 text-destructive inline-flex size-12 items-center justify-center rounded-full">
-          <AlertCircle className="size-6" />
-        </div>
-        <h1 className="font-display text-heading-xl text-foreground mt-6">Something went wrong</h1>
-        <p className="text-body-md text-text-dim mt-2">
-          We&apos;ve been notified and we&apos;re looking into it. Try again?
+    <div className="min-h-[calc(100vh-200px)] flex items-center">
+      <div className="container mx-auto px-4 py-16 max-w-2xl">
+        <p className="text-caption uppercase tracking-wider text-text-faint">
+          500
         </p>
-        <div className="mt-8 flex items-center justify-center gap-3">
+        <h1 className="mt-2 font-display text-display-lg text-foreground">
+          Something went wrong on our end.
+        </h1>
+        <p className="mt-4 text-body-md text-text-dim max-w-prose">
+          We&apos;ve been notified. You can try again, or come back in a
+          moment.
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center gap-4">
           <button
+            type="button"
             onClick={reset}
-            className="bg-primary text-body-sm text-primary-foreground hover:bg-primary-hover rounded-md px-5 py-2.5 transition-colors"
+            className="inline-flex items-center gap-2 rounded bg-primary px-5 py-2.5 text-body-sm font-medium text-primary-foreground hover:bg-primary-hover transition-colors"
           >
+            <RefreshCw className="size-4" />
             Try again
           </button>
+
           <Link
             href="/"
-            className="border-border-strong text-body-sm text-foreground hover:bg-surface-subtle rounded-md border bg-transparent px-5 py-2.5 transition-colors"
+            className="group inline-flex items-center gap-2 text-body-sm text-text-dim hover:text-foreground transition-colors"
           >
-            Back to homepage
+            <span className="border-b border-border-strong group-hover:border-foreground transition-colors">
+              Back to homepage
+            </span>
+            <ArrowRight className="size-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
           </Link>
         </div>
-        {error.digest && (
-          <p className="text-caption text-text-faint mt-6 font-mono">Error ID: {error.digest}</p>
+
+        {isDev && (
+          <details className="mt-12 border-l-2 border-destructive pl-4 max-w-prose">
+            <summary className="text-caption uppercase tracking-wider text-destructive cursor-pointer hover:text-destructive/80">
+              Dev: error details
+            </summary>
+            <pre className="mt-3 text-caption text-text-dim font-mono whitespace-pre-wrap wrap-break-word">
+              {error.message}
+              {error.digest && `\n\nDigest: ${error.digest}`}
+              {error.stack && `\n\n${error.stack}`}
+            </pre>
+          </details>
         )}
       </div>
     </div>

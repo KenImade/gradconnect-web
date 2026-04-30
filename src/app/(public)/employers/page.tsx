@@ -7,13 +7,30 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { Pagination } from "@/components/shared/pagination";
 import { parseEmployerFilters } from "@/lib/validation/employer-filters";
+import { SITE, absoluteUrl } from "@/lib/seo/config";
 
 export const metadata: Metadata = {
-    title: "Graduate Employers in Nigeria",
+    title: "Employers Hiring Graduates in Nigeria",
     description:
-        "Browse verified graduate employers hiring in Nigeria — banks, consulting firms, FMCG, oil & gas, and tech. Find your next career opportunity.",
-    alternates: {
-        canonical: "/employers",
+        "Browse Nigerian companies hiring graduates. Read employer profiles, see active programmes, and find candidate reviews of recruitment processes.",
+    alternates: { canonical: absoluteUrl("/employers") },
+    openGraph: {
+        type: "website",
+        url: absoluteUrl("/employers"),
+        title: "Employers Hiring Graduates in Nigeria | GradConnect",
+        description:
+            "Browse Nigerian companies hiring graduates. Read employer profiles and candidate reviews.",
+        siteName: SITE.name,
+        locale: SITE.locale,
+        images: [{ url: absoluteUrl("/og/default.png"), width: 1200, height: 630 }],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Employers Hiring Graduates in Nigeria | GradConnect",
+        description:
+            "Browse Nigerian companies hiring graduates.",
+        site: SITE.twitter,
+        images: [absoluteUrl("/og/default.png")],
     },
 };
 

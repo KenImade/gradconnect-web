@@ -33,6 +33,7 @@ export function AdminOpportunityFilters() {
         next.delete("page");
         const qs = next.toString();
         router.replace(qs ? `${pathname}?${qs}` : pathname);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedQuery]);
 
     function setParam(key: string, value: string) {
@@ -46,7 +47,7 @@ export function AdminOpportunityFilters() {
 
     return (
         <div className="flex flex-wrap items-center gap-3">
-            <div className="relative flex-1 min-w-[240px]">
+            <div className="relative flex-1 min-w-60">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-admin-text-faint" />
                 <input
                     type="search"

@@ -31,15 +31,15 @@ export const reviewSubmitSchema = z.object({
             return !isNaN(n) && n >= 2015 && n <= currentYear;
         }, { message: `Enter a year between 2015 and ${currentYear}` }),
     outcome: z.enum(["offer", "waitlisted", "rejected", "withdrew"], {
-        errorMap: () => ({ message: "Pick an outcome" }),
+        message: "Pick an outcome",
     }),
     difficulty_rating: z
-        .number({ invalid_type_error: "Rate the difficulty" })
+        .number({ message: "Rate the difficulty" })
         .int()
         .min(1, "Rate the difficulty")
         .max(5),
     experience_rating: z
-        .number({ invalid_type_error: "Rate your experience" })
+        .number({ message: "Rate your experience" })
         .int()
         .min(1, "Rate your experience")
         .max(5),

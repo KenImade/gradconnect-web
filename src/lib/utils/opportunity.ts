@@ -1,6 +1,6 @@
 import type {
     OpportunityType,
-    OpportunityStatus,
+    OpportunityStoredStatus,
 } from "@/lib/api/endpoints/opportunities.types";
 
 export const OPPORTUNITY_TYPE_LABELS: Record<OpportunityType, string> = {
@@ -10,7 +10,7 @@ export const OPPORTUNITY_TYPE_LABELS: Record<OpportunityType, string> = {
     industrial_attachment: "Industrial Attachment",
 };
 
-export const OPPORTUNITY_STATUS_LABELS: Record<OpportunityStatus, string> = {
+export const OPPORTUNITY_STATUS_LABELS: Record<OpportunityStoredStatus, string> = {
     upcoming: "Upcoming",
     open: "Open",
     closed: "Closed",

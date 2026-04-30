@@ -7,12 +7,30 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { Pagination } from "@/components/shared/pagination";
 import { parseOpportunityFilters } from "@/lib/validation/opportunity-filters";
+import { SITE, absoluteUrl } from "@/lib/seo/config";
 
 export const metadata: Metadata = {
     title: "Graduate Opportunities in Nigeria",
     description:
         "Browse open graduate trainee programmes, internships, and NYSC-compatible roles in Nigeria. Search by industry, location, or discipline.",
-    alternates: { canonical: "/opportunities" },
+    alternates: { canonical: absoluteUrl("/opportunities") },
+    openGraph: {
+        type: "website",
+        url: absoluteUrl("/opportunities"),
+        title: "Graduate Opportunities in Nigeria | GradConnect",
+        description:
+            "Browse open graduate trainee programmes, internships, and NYSC roles in Nigeria.",
+        siteName: SITE.name,
+        locale: SITE.locale,
+        images: [{ url: absoluteUrl("/og/default.png"), width: 1200, height: 630 }],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Graduate Opportunities in Nigeria",
+        description: "Browse open graduate trainee programmes, internships, and NYSC roles.",
+        site: SITE.twitter,
+        images: [absoluteUrl("/og/default.png")],
+    },
 };
 
 type PageProps = {

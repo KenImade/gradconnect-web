@@ -5,16 +5,38 @@ import { BookmarksProvider } from "@/lib/hooks/use-bookmarks";
 import { TrackerProvider } from "@/lib/hooks/use-tracker";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { Metadata } from "next";
+import { SITE, absoluteUrl } from "@/lib/seo/config";
 
 export const metadata: Metadata = {
-  title: "GradConnect — Nigeria's graduate career intelligence platform",
-  description:
-    "Discover verified graduate employers, understand their assessment processes, and prepare to apply. Built for Nigerian graduates.",
+  title: {
+    absolute: "GradConnect — Nigeria's Graduate Career Platform",
+  },
+  description: SITE.description,
+  alternates: {
+    canonical: absoluteUrl("/"),
+  },
   openGraph: {
-    title: "GradConnect — Nigeria's graduate career platform",
-    description:
-      "Discover verified graduate employers, understand their assessment processes, and prepare to apply.",
     type: "website",
+    url: absoluteUrl("/"),
+    title: "GradConnect — Nigeria's Graduate Career Platform",
+    description: SITE.description,
+    siteName: SITE.name,
+    locale: SITE.locale,
+    images: [
+      {
+        url: absoluteUrl("/og/default.png"),
+        width: 1200,
+        height: 630,
+        alt: "GradConnect",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GradConnect — Nigeria's Graduate Career Platform",
+    description: SITE.description,
+    site: SITE.twitter,
+    images: [absoluteUrl("/og/default.png")],
   },
 };
 

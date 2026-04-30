@@ -11,11 +11,11 @@ export type OpportunityType =
     | "nysc"
     | "industrial_attachment";
 
-export type OpportunityStatus =
-    | "upcoming"
-    | "open"
-    | "closed"
-    | "withdrawn";
+// Stored status — what the backend returns on actual opportunity records
+export type OpportunityStoredStatus = "open" | "upcoming" | "closed" | "withdrawn";
+
+// Query filter status — what clients can request (includes the composite)
+export type OpportunityStatus = OpportunityStoredStatus | "open_or_upcoming";
 
 /** Returned by GET /opportunities (summary + in detail) */
 export type Opportunity = {
@@ -24,7 +24,7 @@ export type Opportunity = {
     slug: string;
     type: OpportunityType;
     intake_year: number;
-    status: OpportunityStatus;
+    status: OpportunityStoredStatus;
     description: string;
     requirements: string | null;
     location: string;

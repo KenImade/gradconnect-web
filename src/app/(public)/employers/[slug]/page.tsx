@@ -3,36 +3,62 @@ import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { getEmployer } from "@/lib/api/endpoints/employers.server";
 import { APIError } from "@/lib/api/errors";
+import { Employer } from "@/lib/api/endpoints/employers.types";
+import {
+    employerOrganizationSchema,
+    breadcrumbSchema,
+} from "@/lib/seo/structured-data";
+import { absoluteUrl, SITE } from "@/lib/seo/config";
+import { JsonLd } from "@/components/shared/json-ld";
 
 type PageProps = {
     params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata({
-    params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
+    let employer: Employer;
     try {
-        const { data: employer } = await getEmployer(slug);
-        const description = employer.overview
-            ? truncate(employer.overview, 160)
-            : `${employer.name} graduate programme information, hiring process, and community reviews.`;
-
-        return {
-            title: `${employer.name} — Graduate Programme, Hiring Process & Reviews`,
-            description,
-            alternates: { canonical: `/employers/${employer.slug}` },
-            openGraph: {
-                title: `${employer.name} on GradConnect`,
-                description,
-                type: "profile",
-                url: `/employers/${employer.slug}`,
-            },
-            twitter: { card: "summary_large_image" },
-        };
+        employer = (await getEmployer(slug)).data;
     } catch {
         return { title: "Employer not found" };
     }
+
+    const title = `${employer.name} — ${employer.industry}`;
+    const description =
+        employer.overview?.slice(0, 160).trim() +
+        (employer.overview && employer.overview.length > 160 ? "…" : "") ||
+        `${employer.name} careers, graduate programmes, and assessment process insights from candidates.`;
+    const url = absoluteUrl(`/employers/${employer.slug}`);
+
+    return {
+        title,
+        description,
+        alternates: { canonical: url },
+        openGraph: {
+            type: "profile",
+            url,
+            title,
+            description,
+            siteName: SITE.name,
+            locale: SITE.locale,
+            images: [
+                {
+                    url: absoluteUrl(`/api/og/employer/${employer.slug}`),
+                    width: 1200,
+                    height: 630,
+                    alt: employer.name,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            site: SITE.twitter,
+            images: [absoluteUrl(`/api/og/employer/${employer.slug}`)],
+        },
+    };
 }
 
 export default async function EmployerOverviewPage({ params }: PageProps) {
@@ -47,25 +73,16 @@ export default async function EmployerOverviewPage({ params }: PageProps) {
         throw err;
     }
 
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: employer.name,
-        url: employer.website ?? undefined,
-        logo: employer.logo_url ?? undefined,
-        description: employer.overview ?? undefined,
-        address: employer.hq_location
-            ? { "@type": "PostalAddress", addressLocality: employer.hq_location }
-            : undefined,
-        sameAs: Object.values(employer.social_links).filter(Boolean),
-    };
+    const orgSchema = employerOrganizationSchema(employer);
+    const breadcrumbs = breadcrumbSchema([
+        { name: "Home", url: absoluteUrl("/") },
+        { name: "Employers", url: absoluteUrl("/employers") },
+        { name: employer.name, url: absoluteUrl(`/employers/${employer.slug}`) },
+    ]);
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JsonLd data={[orgSchema, breadcrumbs]} />
 
             <div className="grid gap-10 lg:grid-cols-3">
                 {/* Main column */}
@@ -152,9 +169,4 @@ function SidebarCard({
             <div className="mt-4">{children}</div>
         </div>
     );
-}
-
-function truncate(s: string, max: number): string {
-    if (s.length <= max) return s;
-    return s.slice(0, max - 1).trimEnd() + "…";
 }

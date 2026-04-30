@@ -1,15 +1,15 @@
 import { cn } from "@/lib/utils";
-import type { OpportunityStatus } from "@/lib/api/endpoints/opportunities.types";
 import { OPPORTUNITY_STATUS_LABELS } from "@/lib/utils/opportunity";
+import type { OpportunityStoredStatus } from "@/lib/api/endpoints/opportunities.types";
 
-const STATUS_STYLES: Record<OpportunityStatus, string> = {
-    upcoming: "bg-info/10 text-info",
-    open: "bg-success/10 text-success",
-    closed: "bg-bg-muted text-text-dim",
-    withdrawn: "bg-bg-muted text-text-faint line-through",
+const STATUS_STYLES: Record<OpportunityStoredStatus, string> = {
+    upcoming: "Upcoming",
+    open: "Open",
+    closed: "Closed",
+    withdrawn: "Withdrawn",
 };
 
-export function StatusBadge({ status }: { status: OpportunityStatus }) {
+export function StatusBadge({ status }: { status: OpportunityStoredStatus }) {
     return (
         <span
             className={cn(

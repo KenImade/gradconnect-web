@@ -10,6 +10,40 @@ import { ValueProp } from "@/components/homepage/value-prop";
 import { ReturnBanner } from "@/components/homepage/return-banner";
 import { FinalCTA } from "@/components/homepage/final-cta";
 import { NotebookGlass } from "@/components/homepage/illustrations/notebook-glass";
+import { SITE, absoluteUrl } from "@/lib/seo/config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "GradConnect — Nigeria's Graduate Career Platform",
+  },
+  description: SITE.description,
+  alternates: { canonical: absoluteUrl("/") },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/"),
+    title: "GradConnect — Nigeria's Graduate Career Platform",
+    description: SITE.description,
+    siteName: SITE.name,
+    locale: SITE.locale,
+    images: [
+      {
+        url: absoluteUrl("/og/default.png"),
+        width: 1200,
+        height: 630,
+        alt: "GradConnect",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GradConnect — Nigeria's Graduate Career Platform",
+    description: SITE.description,
+    site: SITE.twitter,
+    images: [absoluteUrl("/og/default.png")],
+  },
+};
+
 
 export default async function Home() {
   const [user, data] = await Promise.all([getSession(), getHomepageData()]);
@@ -54,7 +88,7 @@ export default async function Home() {
             className="hidden text-primary lg:flex items-center justify-center"
             aria-hidden
           >
-            <NotebookGlass className="w-full max-w-[300px]" />
+            <NotebookGlass className="w-full max-w-75" />
           </div>
         </div>
       </section>
