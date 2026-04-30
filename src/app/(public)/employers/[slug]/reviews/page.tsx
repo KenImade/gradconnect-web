@@ -14,6 +14,9 @@ import { getSession } from "@/lib/auth/session";
 import { breadcrumbSchema } from "@/lib/seo/structured-data";
 import { SITE, absoluteUrl } from "@/lib/seo/config";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Suspense } from "react";
+import { PaginationSkeleton } from '@/components/shared/filter-skeleton';
+import { FilterSkeleton } from '../../../../../components/shared/filter-skeleton';
 
 type PageProps = {
     params: Promise<{ slug: string }>;
@@ -165,7 +168,9 @@ export default async function EmployerReviewsPage({ params, searchParams }: Page
                             <p className="text-body-sm text-text-dim">
                                 Showing {reviews.length} of {totalRecords}
                             </p>
-                            <ReviewsSortSelector />
+                            <Suspense fallback={<FilterSkeleton />}>
+                                <ReviewsSortSelector />
+                            </Suspense>
                         </div>
 
                         <div className="border-t border-border">
@@ -174,11 +179,13 @@ export default async function EmployerReviewsPage({ params, searchParams }: Page
                             ))}
                         </div>
 
-                        <Pagination
-                            className="mt-8"
-                            currentPage={currentPage}
-                            lastPage={lastPage}
-                        />
+                        <Suspense fallback={<PaginationSkeleton className="mt-8" />}>
+                            <Pagination
+                                className="mt-12"
+                                currentPage={currentPage}
+                                lastPage={lastPage}
+                            />
+                        </Suspense>
                     </>
                 )}
             </div>

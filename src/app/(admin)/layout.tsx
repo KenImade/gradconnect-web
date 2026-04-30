@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { requireSession } from "@/lib/auth/session";
 import { AdminNav } from "@/components/admin/admin-nav";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
     title: { template: "%s · Admin · GradConnect", default: "Admin · GradConnect" },
     robots: { index: false, follow: false }, // keep admin out of search engines

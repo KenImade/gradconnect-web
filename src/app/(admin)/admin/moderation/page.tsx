@@ -3,6 +3,8 @@ import { listAdminReviews } from "@/lib/api/endpoints/admin-reviews.server";
 import { listEmployers } from "@/lib/api/endpoints/employers.server";
 import { ModerationStatusFilter } from "@/components/admin/moderation-status-filter";
 import { ModerationList } from "@/components/admin/moderation-list";
+import { Suspense } from "react";
+import { FilterSkeleton } from "@/components/shared/filter-skeleton";
 
 export const metadata: Metadata = { title: "Moderation" };
 
@@ -61,9 +63,11 @@ export default async function ModerationPage({ searchParams }: PageProps) {
 
             {/* Filter tabs */}
             <div className="mt-8 max-w-5xl">
-                <ModerationStatusFilter
-                    counts={{ [status]: totalRecords } as Partial<Record<typeof status, number>>}
-                />
+                <Suspense fallback={<FilterSkeleton />}>
+                    <ModerationStatusFilter
+                        counts={{ [status]: totalRecords } as Partial<Record<typeof status, number>>}
+                    />
+                </Suspense>
             </div>
 
             {/* List */}

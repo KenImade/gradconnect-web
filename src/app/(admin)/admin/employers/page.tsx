@@ -4,6 +4,8 @@ import { Plus } from "lucide-react";
 import { listEmployers } from "@/lib/api/endpoints/employers.server";
 import { AdminEmployerFilters } from "@/components/admin/employer/employer-filters";
 import { AdminEmployerTable } from "@/components/admin/employer/employer-table";
+import { Suspense } from "react";
+import { FilterSkeleton } from "@/components/shared/filter-skeleton";
 
 export const metadata: Metadata = { title: "Employers" };
 
@@ -61,7 +63,9 @@ export default async function AdminEmployersPage({ searchParams }: PageProps) {
                 </div>
 
                 <div className="mt-8">
-                    <AdminEmployerFilters />
+                    <Suspense fallback={<FilterSkeleton />}>
+                        <AdminEmployerFilters />
+                    </Suspense>
                 </div>
 
                 <div className="mt-2">

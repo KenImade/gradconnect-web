@@ -8,6 +8,11 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Pagination } from "@/components/shared/pagination";
 import { parseEmployerFilters } from "@/lib/validation/employer-filters";
 import { SITE, absoluteUrl } from "@/lib/seo/config";
+import { Suspense } from "react";
+import { PaginationSkeleton } from '@/components/shared/filter-skeleton';
+import { FilterSkeleton } from '../../../components/shared/filter-skeleton';
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Employers Hiring Graduates in Nigeria",
@@ -70,7 +75,9 @@ export default async function EmployersPage({ searchParams }: PageProps) {
             />
 
             <div className="mt-8">
-                <EmployerFilterBar />
+                <Suspense fallback={<FilterSkeleton />}>
+                    <EmployerFilterBar />
+                </Suspense>
             </div>
 
             <div className="mt-6 text-body-sm text-text-dim">
@@ -102,11 +109,13 @@ export default async function EmployersPage({ searchParams }: PageProps) {
                         ))}
                     </div>
 
-                    <Pagination
-                        className="mt-12"
-                        currentPage={currentPage}
-                        lastPage={lastPage}
-                    />
+                    <Suspense fallback={<PaginationSkeleton className="mt-8" />}>
+                        <Pagination
+                            className="mt-12"
+                            currentPage={currentPage}
+                            lastPage={lastPage}
+                        />
+                    </Suspense>
                 </>
             )}
         </div>

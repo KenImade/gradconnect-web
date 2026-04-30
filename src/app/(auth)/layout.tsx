@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-surface-subtle flex min-h-screen flex-col">

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { getSession } from "@/lib/auth/session";
 import { LoginForm } from "@/components/auth/login-form";
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: "Log in",
@@ -55,7 +56,9 @@ export default async function LoginPage({ searchParams }: PageProps) {
       )}
 
       <div className="mt-10">
-        <LoginForm />
+        <Suspense fallback={<div className="h-32 animate-pulse rounded bg-surface-subtle" />}>
+          <LoginForm />
+        </Suspense>
       </div>
 
       <p className="mt-8 text-center text-body-sm text-text-dim">

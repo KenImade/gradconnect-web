@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Compass } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default function NotFound() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">

@@ -1,10 +1,58 @@
 import type { MetadataRoute } from "next";
-import { SITE, absoluteUrl, PUBLIC_STATIC_ROUTES } from "@/lib/seo/config";
-import { listEmployers } from "@/lib/api/endpoints/employers.server";
-import { listOpportunities } from "@/lib/api/endpoints/opportunities";
+import { absoluteUrl, PUBLIC_STATIC_ROUTES } from "@/lib/seo/config";
 
 // Regenerate the sitemap hourly. New content appears in search within an hour.
 export const revalidate = 3600;
+
+// Cookieless API base for sitemap fetches. Falls back to localhost for dev.
+const API_BASE =
+    (process.env.API_BASE_URL ?? "http://127.0.0.1:4000/api/v1").replace(/\/$/, "");
+
+type EmployerSummary = {
+    id: string;
+    slug: string;
+    updated_at?: string;
+};
+
+type OpportunitySummary = {
+    id: string;
+    slug: string;
+    status: string;
+    created_at: string;
+};
+
+type Pagination = {
+    last_page: number;
+};
+
+type PaginatedResponse<T> = {
+    data: T[];
+    pagination: Pagination;
+};
+
+async function fetchPublicEmployers(
+    page: number,
+    pageSize: number,
+): Promise<PaginatedResponse<EmployerSummary>> {
+    const res = await fetch(
+        `${API_BASE}/employers?page=${page}&page_size=${pageSize}`,
+        { next: { revalidate: 3600 } },
+    );
+    if (!res.ok) throw new Error(`employers fetch failed: ${res.status}`);
+    return res.json();
+}
+
+async function fetchPublicOpportunities(
+    page: number,
+    pageSize: number,
+): Promise<PaginatedResponse<OpportunitySummary>> {
+    const res = await fetch(
+        `${API_BASE}/opportunities?page=${page}&page_size=${pageSize}&status=open_or_upcoming`,
+        { next: { revalidate: 3600 } },
+    );
+    if (!res.ok) throw new Error(`opportunities fetch failed: ${res.status}`);
+    return res.json();
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const now = new Date();
@@ -28,10 +76,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [...staticEntries, ...employerEntries, ...opportunityEntries];
 }
 
-/**
- * Paginate through all employers. Each employer contributes 3 sitemap entries:
- * the hub, /process, and /reviews.
- */
 async function fetchAllEmployers(): Promise<MetadataRoute.Sitemap> {
     const entries: MetadataRoute.Sitemap = [];
     const PAGE_SIZE = 100;
@@ -39,10 +83,7 @@ async function fetchAllEmployers(): Promise<MetadataRoute.Sitemap> {
 
     try {
         while (true) {
-            const { data, pagination } = await listEmployers({
-                page,
-                page_size: PAGE_SIZE,
-            });
+            const { data, pagination } = await fetchPublicEmployers(page, PAGE_SIZE);
 
             for (const employer of data) {
                 const baseUrl = absoluteUrl(`/employers/${employer.slug}`);
@@ -68,22 +109,15 @@ async function fetchAllEmployers(): Promise<MetadataRoute.Sitemap> {
 
             if (page >= pagination.last_page) break;
             page += 1;
-
-            // Safety cap — at 100/page that's 5,000 employers
-            if (page > 50) break;
+            if (page > 50) break; // safety cap (5,000 employers)
         }
     } catch (err) {
         console.error("sitemap: failed to fetch employers", err);
-        // Continue with what we have rather than 500-ing the whole sitemap
     }
 
     return entries;
 }
 
-/**
- * Paginate through opportunities. Only index actively-recruiting listings.
- * Closed and withdrawn don't waste crawl budget.
- */
 async function fetchAllOpportunities(): Promise<MetadataRoute.Sitemap> {
     const entries: MetadataRoute.Sitemap = [];
     const PAGE_SIZE = 100;
@@ -91,11 +125,7 @@ async function fetchAllOpportunities(): Promise<MetadataRoute.Sitemap> {
 
     try {
         while (true) {
-            const { data, pagination } = await listOpportunities({
-                page,
-                page_size: PAGE_SIZE,
-                status: "open_or_upcoming",
-            });
+            const { data, pagination } = await fetchPublicOpportunities(page, PAGE_SIZE);
 
             for (const opportunity of data) {
                 entries.push({

@@ -7,6 +7,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import type { Metadata } from "next";
 import { SITE, absoluteUrl } from "@/lib/seo/config";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: {
     absolute: "GradConnect — Nigeria's Graduate Career Platform",

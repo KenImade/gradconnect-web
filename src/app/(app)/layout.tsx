@@ -5,6 +5,8 @@ import { BookmarksProvider } from "@/lib/hooks/use-bookmarks";
 import { TrackerProvider } from "@/lib/hooks/use-tracker";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+export const dynamic = "force-dynamic";
+
 export default async function AppLayout({
   children,
 }: {

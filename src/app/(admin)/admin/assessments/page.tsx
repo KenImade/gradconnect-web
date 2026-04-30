@@ -7,6 +7,8 @@ import {
 } from "@/lib/api/endpoints/admin-assessments.server";
 import { AdminAssessmentFilters } from "@/components/admin/assessment/assessment-filters";
 import { AdminAssessmentTable } from "@/components/admin/assessment/assessment-table";
+import { Suspense } from "react";
+import { FilterSkeleton } from "@/components/shared/filter-skeleton";
 
 export const metadata: Metadata = { title: "Assessments" };
 
@@ -62,7 +64,9 @@ export default async function AdminAssessmentsPage({ searchParams }: PageProps) 
                 </div>
 
                 <div className="mt-8">
-                    <AdminAssessmentFilters />
+                    <Suspense fallback={<FilterSkeleton />}>
+                        <AdminAssessmentFilters />
+                    </Suspense>
                 </div>
 
                 <div className="mt-2">

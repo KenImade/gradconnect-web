@@ -10,6 +10,8 @@ import {
     listAdminOpportunities,
     type ListAdminOpportunitiesParams,
 } from "@/lib/api/endpoints/admin-opportunities.server";
+import { Suspense } from "react";
+import { FilterSkeleton } from "@/components/shared/filter-skeleton";
 
 export const metadata: Metadata = { title: "Opportunities" };
 
@@ -85,7 +87,9 @@ export default async function AdminOpportunitiesPage({ searchParams }: PageProps
                 </div>
 
                 <div className="mt-8">
-                    <AdminOpportunityFilters />
+                    <Suspense fallback={<FilterSkeleton />}>
+                        <AdminOpportunityFilters />
+                    </Suspense>
                 </div>
 
                 <div className="mt-2">
