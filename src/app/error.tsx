@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { ArrowRight, RefreshCw } from "lucide-react";
 
 type Props = {
@@ -11,8 +12,10 @@ type Props = {
 
 export default function GlobalError({ error, reset }: Props) {
   useEffect(() => {
-    // Log to console in dev; eventually send to Sentry
-    console.error("Public error boundary caught:", error);
+    Sentry.captureException(error, {
+      extra: { digest: error.digest },
+      tags: { boundary: "public-root" }
+    })
   }, [error]);
 
   const isDev = process.env.NODE_ENV !== "production";

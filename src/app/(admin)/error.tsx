@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 
 type Props = {
@@ -11,7 +12,10 @@ type Props = {
 
 export default function AdminError({ error, reset }: Props) {
     useEffect(() => {
-        console.error("Admin error boundary caught:", error);
+        Sentry.captureException(error, {
+            extra: { digest: error.digest },
+            tags: { boundary: "admin" },
+        });
     }, [error]);
 
     const isDev = process.env.NODE_ENV !== "production";

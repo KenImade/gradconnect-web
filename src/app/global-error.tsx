@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
+import Error from "next/error";
 
 type Props = {
   error: Error & { digest?: string };
@@ -9,7 +11,10 @@ type Props = {
 
 export default function GlobalError({ error, reset }: Props) {
   useEffect(() => {
-    console.error("Global error boundary caught:", error);
+    Sentry.captureException(error, {
+      extra: { digest: error.digest },
+      tags: { boundary: "global" },
+    });
   }, [error]);
 
   return (
@@ -17,8 +22,7 @@ export default function GlobalError({ error, reset }: Props) {
       <body
         style={{
           margin: 0,
-          fontFamily:
-            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
           color: "#1a1a1a",
           backgroundColor: "#fdf9f3",
           minHeight: "100vh",
@@ -59,9 +63,8 @@ export default function GlobalError({ error, reset }: Props) {
               lineHeight: 1.5,
             }}
           >
-            Something went wrong before we could render anything.
-            Try refreshing — if the problem persists, the site may
-            be temporarily down.
+            Something went wrong before we could render anything. Try refreshing — if the problem
+            persists, the site may be temporarily down.
           </p>
 
           <button
