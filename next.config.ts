@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
       // Add other origins as needed (e.g. company logos from their own domains)
     ],
   },
+  experimental: {},
+  compiler: {},
 };
 
 export default nextConfig;
