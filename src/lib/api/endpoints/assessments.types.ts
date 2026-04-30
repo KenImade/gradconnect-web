@@ -1,16 +1,13 @@
-/**
- * Assessment domain types.
- * Matches the Go backend's data.AssessmentProfile struct.
- */
+import type { EmployerStub } from "./employers.types";
 
 export type AssessmentStage = {
     order: number;
     stage_name: string;
-    stage_type: "form" | "test" | "interview" | "assessment" | "other";
-    description: string;
+    stage_type: string;
+    description?: string;
 };
 
-export type AssessmentProfile = {
+export type Assessment = {
     id: string;
     employer_id: string;
     programme_type: string;
@@ -22,4 +19,5 @@ export type AssessmentProfile = {
     version: number;
     created_at: string;
     updated_at: string;
+    employer: EmployerStub;
 };

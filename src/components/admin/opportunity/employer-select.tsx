@@ -118,7 +118,7 @@ export function EmployerSelect({
             )}
 
             {open && !selected && (
-                <div className="absolute left-0 right-0 top-full z-30 mt-1 rounded border border-admin-border bg-admin-surface shadow-md">
+                <div className="absolute left-0 right-0 top-full z-50 mt-1 rounded border border-admin-border bg-white shadow-lg">
                     <div className="relative border-b border-admin-border">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-admin-text-faint" />
                         <input

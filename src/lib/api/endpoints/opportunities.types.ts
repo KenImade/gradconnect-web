@@ -3,6 +3,8 @@
  * Matches the Go backend's response from GET /opportunities.
  */
 
+import { EmployerStub } from "./employers.types";
+
 export type OpportunityType =
     | "graduate_trainee"
     | "internship"
@@ -14,15 +16,6 @@ export type OpportunityStatus =
     | "open"
     | "closed"
     | "withdrawn";
-
-/** Employer stub embedded inside each opportunity */
-export type OpportunityEmployer = {
-    id: string;
-    name: string;
-    slug: string;
-    logo_url: string | null;
-    industry: string;
-};
 
 /** Returned by GET /opportunities (summary + in detail) */
 export type Opportunity = {
@@ -44,7 +37,7 @@ export type Opportunity = {
     source_url: string | null;
     created_at: string;
     updated_at: string;
-    employer: OpportunityEmployer;
+    employer: EmployerStub;
 };
 
 /** Query parameters for GET /opportunities */

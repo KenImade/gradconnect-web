@@ -65,3 +65,11 @@ export type ListEmployersParams = {
     page?: number;
     page_size?: number;
 };
+
+export type EmployerStub = {
+    id: string;
+    name: string;
+    slug: string;
+    logo_url: string | null;
+    industry: string;
+}
