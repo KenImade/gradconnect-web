@@ -21,6 +21,8 @@ import {
 import { APIError } from "@/lib/api/errors";
 import { OfficesEditor } from "./offices-editor";
 import type { Employer } from "@/lib/api/endpoints/employers.types";
+import { LogoUploadField } from "./logo-upload-field";
+
 
 type Props = {
     /** When provided, form is in edit mode; otherwise create. */
@@ -81,7 +83,6 @@ export function EmployerForm({ initial }: Props) {
         });
     }
 
-    const logoUrl = watch("logo_url");
 
     async function onSubmit(data: EmployerFormInput) {
         setSubmitError(null);
@@ -291,44 +292,12 @@ export function EmployerForm({ initial }: Props) {
                     Profile
                 </h2>
                 <div className="mt-4 space-y-5">
-                    <div>
-                        <label htmlFor="logo_url" className="block text-body-sm font-medium text-admin-foreground">
-                            Logo URL
-                            <span className="ml-2 text-caption text-admin-text-faint font-normal italic">
-                                optional
-                            </span>
-                        </label>
-                        <p className="mt-0.5 text-caption text-admin-text-faint">
-                            Paste a CDN URL. Upload widget coming later.
-                        </p>
-                        <div className="mt-2 flex items-start gap-3">
-                            <input
-                                {...register("logo_url")}
-                                id="logo_url"
-                                type="url"
-                                placeholder="https://cdn.gradconnect.ng/logos/example.png"
-                                className="flex-1 rounded border border-admin-border bg-admin-surface px-3 py-2 text-body-md focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/30"
-                            />
-                            {logoUrl && (
-                                <div className="size-10 shrink-0 rounded border border-admin-border bg-admin-surface overflow-hidden flex items-center justify-center">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={logoUrl}
-                                        alt="Logo preview"
-                                        className="size-full object-contain"
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).style.display = "none";
-                                        }}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                        {errors.logo_url && (
-                            <p className="mt-1 text-caption text-destructive">
-                                {errors.logo_url.message}
-                            </p>
-                        )}
-                    </div>
+                    <LogoUploadField
+                        value={watch("logo_url") ?? ""}
+                        onChange={(url) => setValue("logo_url", url, { shouldDirty: true, shouldValidate: true })}
+                        error={errors.logo_url?.message}
+                        disabled={isSubmitting}
+                    />
 
                     <div>
                         <label htmlFor="overview" className="block text-body-sm font-medium text-admin-foreground">
@@ -342,7 +311,7 @@ export function EmployerForm({ initial }: Props) {
                             id="overview"
                             rows={4}
                             placeholder="Access Bank Plc is one of Nigeria's largest commercial banks…"
-                            className="mt-1.5 w-full rounded border border-admin-border bg-admin-surface px-3 py-2 text-body-md focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/30 resize-y min-h-[100px]"
+                            className="mt-1.5 w-full rounded border border-admin-border bg-admin-surface px-3 py-2 text-body-md focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/30 resize-y min-h-25"
                         />
                         {errors.overview && (
                             <p className="mt-1 text-caption text-destructive">
@@ -363,7 +332,7 @@ export function EmployerForm({ initial }: Props) {
                             id="culture"
                             rows={4}
                             placeholder="The graduate programme emphasises rotational learning…"
-                            className="mt-1.5 w-full rounded border border-admin-border bg-admin-surface px-3 py-2 text-body-md focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/30 resize-y min-h-[100px]"
+                            className="mt-1.5 w-full rounded border border-admin-border bg-admin-surface px-3 py-2 text-body-md focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/30 resize-y min-h-25"
                         />
                         {errors.culture && (
                             <p className="mt-1 text-caption text-destructive">

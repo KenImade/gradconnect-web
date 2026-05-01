@@ -8,6 +8,7 @@ import {
     Briefcase,
     ClipboardList,
     ArrowLeftToLine,
+    Upload,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { User } from "@/lib/api/endpoints/users.types";
@@ -40,6 +41,11 @@ const ITEMS: NavItem[] = [
         label: "Assessments",
         href: "/admin/assessments",
         icon: ClipboardList,
+    },
+    {
+        label: "Imports",
+        href: "/admin/imports",
+        icon: Upload,
     },
 ];
 

@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.gradconnect.ng",
       },
+      {
+        protocol: "https",
+        hostname: "pub-f06d7724a78745d4a91e0ea991ac9bef.r2.dev",
+        pathname: "/logos/**",
+      },
       // Add other origins as needed (e.g. company logos from their own domains)
     ],
   },
