@@ -88,10 +88,10 @@ export default async function Home() {
             aria-hidden
           >
             <Image
-              src="/images/hero-illustration.webp"
-              alt="Graduates exploring career opportunities"
-              width={726}
-              height={705}
+              src="/images/rocket-launch.webp"
+              alt="Rocket Launch"
+              width={855}
+              height={581}
               priority
               sizes="(max-width: 1024px) 100vw, 40vw"
               className="w-full h-auto"
@@ -140,7 +140,7 @@ export default async function Home() {
       {/* VALUE PROP */}
       <HomeSection
         eyebrow="How it works"
-        title="Three things you can do here."
+        title="Five things you can do here."
       >
         <ValueProp />
       </HomeSection>

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { SITE, absoluteUrl } from "@/lib/seo/config";
+import { absoluteUrl } from "@/lib/seo/config";
 
 const LAST_UPDATED = "1 May 2026";
 

@@ -95,3 +95,78 @@ export function PenNibIcon({ className }: IconProps) {
         </svg>
     );
 }
+
+/** Tracker — "Track your applications" */
+export function TrackerIcon({ className }: IconProps) {
+    return (
+        <svg
+            viewBox="0 0 48 48"
+            className={className}
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            role="img"
+            aria-label="Application tracker"
+        >
+            {/* Clipboard body */}
+            <rect x="10" y="10" width="28" height="34" rx="2" strokeWidth="1.5" />
+            {/* Clipboard clip */}
+            <rect x="18" y="6" width="12" height="6" rx="1.5" strokeWidth="1.5" />
+            {/* Row 1 — checked (completed stage) */}
+            <path
+                d="M 16 22 L 18 24 L 22 20"
+                stroke="var(--color-primary)"
+                strokeWidth="1.5"
+            />
+            <line x1="26" y1="22" x2="34" y2="22" strokeWidth="1" />
+            {/* Row 2 — checked (completed stage) */}
+            <path
+                d="M 16 30 L 18 32 L 22 28"
+                stroke="var(--color-primary)"
+                strokeWidth="1.5"
+            />
+            <line x1="26" y1="30" x2="34" y2="30" strokeWidth="1" />
+            {/* Row 3 — current stage, marked with a small filled dot */}
+            <circle
+                cx="19"
+                cy="38"
+                r="1.5"
+                fill="var(--color-primary)"
+                stroke="none"
+            />
+            <line x1="26" y1="38" x2="32" y2="38" strokeWidth="1" />
+        </svg>
+    );
+}
+
+/** Speech bubble with check — "Share your experience" */
+export function ShareReviewIcon({ className }: IconProps) {
+    return (
+        <svg
+            viewBox="0 0 48 48"
+            className={className}
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            role="img"
+            aria-label="Share review"
+        >
+            {/* Bubble body */}
+            <path
+                d="M 8 10 Q 8 8 10 8 L 38 8 Q 40 8 40 10 L 40 30 Q 40 32 38 32 L 22 32 L 14 40 L 14 32 L 10 32 Q 8 32 8 30 Z"
+                strokeWidth="1.5"
+            />
+            {/* Inner check (verified / approved review) */}
+            <path
+                d="M 18 20 L 22 24 L 30 16"
+                stroke="var(--color-primary)"
+                strokeWidth="1.5"
+            />
+            {/* Two thin lines suggesting more text content beneath */}
+            <line x1="14" y1="26" x2="22" y2="26" strokeWidth="1" />
+            <line x1="26" y1="26" x2="34" y2="26" strokeWidth="1" />
+        </svg>
+    );
+}
