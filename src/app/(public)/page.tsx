@@ -9,7 +9,7 @@ import { FeaturedReview } from "@/components/homepage/featured-review";
 import { ValueProp } from "@/components/homepage/value-prop";
 import { ReturnBanner } from "@/components/homepage/return-banner";
 import { FinalCTA } from "@/components/homepage/final-cta";
-import { NotebookGlass } from "@/components/homepage/illustrations/notebook-glass";
+import Image from "next/image";
 import { SITE, absoluteUrl } from "@/lib/seo/config";
 import { Metadata } from "next";
 
@@ -53,9 +53,8 @@ export default async function Home() {
       {user && <ReturnBanner user={user} />}
 
       {/* HERO */}
-      {/* HERO */}
       <section className="container mx-auto px-4 py-20 lg:py-28">
-        <div className="grid gap-12 lg:grid-cols-[1fr_320px] lg:gap-16 items-center">
+        <div className="grid gap-12 lg:grid-cols-[3fr_2fr] lg:gap-16 items-center">
           <div className="max-w-3xl">
             <p className="text-caption uppercase tracking-wider text-text-faint">
               Nigeria&apos;s graduate career intelligence platform
@@ -88,7 +87,15 @@ export default async function Home() {
             className="hidden text-primary lg:flex items-center justify-center"
             aria-hidden
           >
-            <NotebookGlass className="w-full max-w-75" />
+            <Image
+              src="/images/hero-illustration.webp"
+              alt="Graduates exploring career opportunities"
+              width={726}
+              height={705}
+              priority
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              className="w-full h-auto"
+            />
           </div>
         </div>
       </section>

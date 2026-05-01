@@ -1,9 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Calendar, MapPin } from "lucide-react";
 import { EmployerLogo } from "@/components/employer/employer-logo";
 import { TypeBadge } from "@/components/opportunity/type-badge";
 import { DeadlineCountdown } from "@/components/opportunity/deadline-countdown";
-import { CalendarPage } from "./illustrations/calendar-page";
 import type { Opportunity } from "@/lib/api/endpoints/opportunities.types";
 
 type ClosingSoonProps = {
@@ -25,7 +25,16 @@ export function ClosingSoon({ opportunities }: ClosingSoonProps) {
                 className="hidden text-primary lg:flex items-start justify-center"
                 aria-hidden
             >
-                <CalendarPage className="w-full max-w-[220px]" />
+                <Image
+                    src="/images/digital-calendar.webp"
+                    alt="Digital Calendar"
+                    width={799}
+                    height={618}
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="w-full h-auto"
+                />
+                {/* <CalendarPage className="w-full max-w-[220px]" /> */}
             </div>
 
             <ul className="grid gap-6 md:grid-cols-3">

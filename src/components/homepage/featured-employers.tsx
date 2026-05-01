@@ -1,6 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import { EmployerLogo } from "@/components/employer/employer-logo";
-import { BuildingFacade } from "./illustrations/building-facade";
 import type { EmployerSummary } from "@/lib/api/endpoints/employers.types";
 
 type FeaturedEmployersProps = {
@@ -41,7 +41,16 @@ export function FeaturedEmployers({ employers }: FeaturedEmployersProps) {
                 className="hidden text-primary lg:flex items-center justify-center"
                 aria-hidden
             >
-                <BuildingFacade className="w-full max-w-[220px]" />
+                <Image
+                    src="/images/building.webp"
+                    alt="Building"
+                    width={581}
+                    height={693}
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="w-full h-auto"
+                />
+                {/* <BuildingFacade className="w-full max-w-55" /> */}
             </div>
         </div>
     );

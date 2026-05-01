@@ -1,6 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { NotebookGlass } from "./illustrations/notebook-glass";
 import type { Review } from "@/lib/api/endpoints/reviews.types";
 
 type FeaturedReviewProps = {
@@ -24,7 +24,7 @@ export function FeaturedReview({ review, employer }: FeaturedReviewProps) {
     }[review.outcome];
 
     return (
-        <div className="grid gap-10 lg:grid-cols-[1fr_280px] lg:gap-14">
+        <div className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:gap-14">
             <figure className="max-w-3xl">
                 <blockquote className="font-display text-heading-xl text-foreground leading-snug">
                     {excerpt}
@@ -60,7 +60,15 @@ export function FeaturedReview({ review, employer }: FeaturedReviewProps) {
                 className="hidden text-primary lg:flex items-start justify-center"
                 aria-hidden
             >
-                <NotebookGlass className="w-full max-w-[260px]" />
+                <Image
+                    src="/images/anonymous-feedback.webp"
+                    alt="Getting feedback from users"
+                    width={960}
+                    height={676}
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="w-full h-auto"
+                />
             </div>
         </div>
     );
