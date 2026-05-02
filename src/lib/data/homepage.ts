@@ -19,10 +19,9 @@ export type HomepageData = {
 };
 
 export async function getHomepageData(): Promise<HomepageData> {
-    const [employersRes, opportunitiesRes, reviewsRes] = await Promise.allSettled([
+    const [employersRes, opportunitiesRes] = await Promise.allSettled([
         listEmployers({ is_verified: true, page_size: 8 }),
         listOpportunities({ status: "open", sort: "deadline", order: "asc", page_size: 3 }),
-        listEmployerReviews("access-bank", { sort: "created_at", order: "desc", page_size: 1 }),
     ]);
 
     const featuredEmployers =
@@ -32,20 +31,33 @@ export async function getHomepageData(): Promise<HomepageData> {
         opportunitiesRes.status === "fulfilled" ? opportunitiesRes.value.data : [];
 
     let featuredReview: Review | null = null;
-    if (reviewsRes.status === "fulfilled" && reviewsRes.value.data.length > 0) {
-        const reviews = reviewsRes.value.data;
-        featuredReview =
-            reviews.find(
-                (r) => r.outcome === "offer" && r.tips && r.tips.length >= 100,
-            ) ?? reviews[0] ?? null;
+    let featuredReviewEmployer: { name: string; slug: string } | null = null;
+
+    const anchor = featuredEmployers[0];
+    if (anchor) {
+        const reviewsRes = await Promise.allSettled([
+            listEmployerReviews(anchor.slug, {
+                sort: "created_at",
+                order: "desc",
+                page_size: 5,
+            }),
+        ]);
+
+        const result = reviewsRes[0];
+        if (result.status === "fulfilled" && result.value.data.length > 0) {
+            const reviews = result.value.data;
+            featuredReview =
+                reviews.find(
+                    (r) => r.outcome === "offer" && r.tips && r.tips.length >= 100,
+                ) ??
+                reviews[0] ??
+                null;
+
+            if (featuredReview) {
+                featuredReviewEmployer = { name: anchor.name, slug: anchor.slug };
+            }
+        }
     }
 
-    return {
-        featuredEmployers,
-        closingSoon,
-        featuredReview,
-        featuredReviewEmployer: featuredReview
-            ? { name: "Access Bank", slug: "access-bank" }
-            : null,
-    };
+    return { featuredEmployers, closingSoon, featuredReview, featuredReviewEmployer };
 }
