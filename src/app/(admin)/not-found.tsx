@@ -27,6 +27,13 @@ export default function AdminNotFound() {
 
             <div className="mt-8 flex flex-col gap-2">
                 <Link
+                    href="/admin/dashboard"
+                    className="inline-flex items-center gap-2 text-body-sm text-admin-foreground hover:text-primary transition-colors"
+                >
+                    <ArrowLeft className="size-3.5" />
+                    Dashboard
+                </Link>
+                <Link
                     href="/admin/employers"
                     className="inline-flex items-center gap-2 text-body-sm text-admin-foreground hover:text-primary transition-colors"
                 >

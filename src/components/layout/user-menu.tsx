@@ -58,7 +58,7 @@ export function UserMenu({ user }: { user: User }) {
                 {user.permissions.includes("admin:full") && (
                     <>
                         <DropdownMenuItem asChild>
-                            <Link href="/admin/moderation" className="cursor-pointer">
+                            <Link href="/admin/dashboard" className="cursor-pointer">
                                 <Shield className="mr-2 size-4" />
                                 Admin
                             </Link>
