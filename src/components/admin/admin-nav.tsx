@@ -9,6 +9,7 @@ import {
     ClipboardList,
     ArrowLeftToLine,
     Upload,
+    LayoutDashboard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { User } from "@/lib/api/endpoints/users.types";
@@ -22,10 +23,15 @@ type NavItem = {
 
 const ITEMS: NavItem[] = [
     {
+        href: "/admin/dashboard",
+        label: "Dashboard",
+        icon: LayoutDashboard,
+        matcher: (p) => p.startsWith("/admin/dashboard") || p === "/admin", // from lucide-react
+    },
+    {
         label: "Moderation",
         href: "/admin/moderation",
         icon: Inbox,
-        matcher: (p) => p.startsWith("/admin/moderation") || p === "/admin",
     },
     {
         label: "Employers",
