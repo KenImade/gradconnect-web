@@ -45,13 +45,14 @@ export type ListOpportunitiesParams = {
     q?: string;
     type?: OpportunityType;
     status?: OpportunityStatus | "all";
+    employer_slug?: string;
     intake_year?: number;
     industry?: string;
     location?: string;
     discipline?: string;
     deadline_before?: string;
     deadline_after?: string;
-    sort?: "deadline" | "opens_at" | "created_at" | "title";
+    sort?: "deadline" | "opens_at" | "created_at" | "title" | "-deadline" | "-opens_at" | "-created_at" | "-title";
     order?: "asc" | "desc";
     page?: number;
     page_size?: number;

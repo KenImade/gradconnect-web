@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { getEmployer } from "@/lib/api/endpoints/employers.server";
+import { listOpportunities } from "@/lib/api/endpoints/opportunities";
+import { listEmployerReviews } from "@/lib/api/endpoints/reviews.server";
 import { APIError } from "@/lib/api/errors";
 import { Employer } from "@/lib/api/endpoints/employers.types";
 import {
@@ -10,6 +12,8 @@ import {
 } from "@/lib/seo/structured-data";
 import { absoluteUrl, SITE } from "@/lib/seo/config";
 import { JsonLd } from "@/components/shared/json-ld";
+import { EmployerOpportunitiesSidebar } from "@/components/employer/employer-opportunities-sidebar";
+import { EmployerReviewsSidebar } from "@/components/employer/employer-reviews-sidebar";
 
 type PageProps = {
     params: Promise<{ slug: string }>;
@@ -72,6 +76,30 @@ export default async function EmployerOverviewPage({ params }: PageProps) {
         if (APIError.isAPIError(err) && err.status === 404) notFound();
         throw err;
     }
+
+    const [opportunitiesResult, reviewsResult] = await Promise.allSettled([
+        listOpportunities({
+            employer_slug: slug,
+            status: "open_or_upcoming",
+            page_size: 5,
+            sort: "-deadline",
+            order: "asc",
+        }),
+        listEmployerReviews(slug, {
+            page_size: 3,
+            sort: "-created_at",
+            order: "desc",
+        }),
+    ]);
+
+    const opportunities =
+        opportunitiesResult.status === "fulfilled"
+            ? opportunitiesResult.value.data
+            : [];
+    const reviews =
+        reviewsResult.status === "fulfilled"
+            ? reviewsResult.value.data
+            : [];
 
     const orgSchema = employerOrganizationSchema(employer);
     const breadcrumbs = breadcrumbSchema([
@@ -139,34 +167,18 @@ export default async function EmployerOverviewPage({ params }: PageProps) {
 
                 {/* Sidebar */}
                 <aside className="space-y-6">
-                    <SidebarCard title="Active opportunities">
-                        <p className="text-body-sm text-text-dim">
-                            Opportunity listings load here in Slice 10.
-                        </p>
-                    </SidebarCard>
-
-                    <SidebarCard title="Recent reviews">
-                        <p className="text-body-sm text-text-dim">
-                            Community reviews load here in Slice 9.
-                        </p>
-                    </SidebarCard>
+                    <EmployerOpportunitiesSidebar
+                        employerSlug={employer.slug}
+                        employerName={employer.name}
+                        opportunities={opportunities}
+                    />
+                    <EmployerReviewsSidebar
+                        employerSlug={employer.slug}
+                        employerName={employer.name}
+                        reviews={reviews}
+                    />
                 </aside>
             </div>
         </>
-    );
-}
-
-function SidebarCard({
-    title,
-    children,
-}: {
-    title: string;
-    children: React.ReactNode;
-}) {
-    return (
-        <div className="rounded-lg border border-border bg-background p-6">
-            <h3 className="font-display text-heading-md text-foreground">{title}</h3>
-            <div className="mt-4">{children}</div>
-        </div>
     );
 }

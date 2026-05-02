@@ -79,7 +79,8 @@ export function OpportunityFilterBar() {
         status !== "open" ||
         industry ||
         urlLocation ||
-        urlDiscipline,
+        urlDiscipline ||
+        searchParams.get("employer"),
     );
 
     function clearAll() {
@@ -90,6 +91,7 @@ export function OpportunityFilterBar() {
             q: null,
             type: null,
             status: null,
+            employer: null,
             industry: null,
             location: null,
             discipline: null,

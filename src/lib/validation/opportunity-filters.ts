@@ -11,6 +11,7 @@ export const opportunityFiltersSchema = z.object({
         .default("open_or_upcoming"),
     intake_year: z.coerce.number().int().optional(),
     industry: z.string().optional(),
+    employer: z.string().optional(),
     location: z.string().optional(),
     discipline: z.string().optional(),
     sort: z

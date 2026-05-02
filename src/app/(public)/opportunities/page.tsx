@@ -50,6 +50,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
         type: filters.type,
         status: filters.status,
         intake_year: filters.intake_year,
+        employer_slug: filters.employer,
         industry: filters.industry,
         location: filters.location,
         discipline: filters.discipline,
