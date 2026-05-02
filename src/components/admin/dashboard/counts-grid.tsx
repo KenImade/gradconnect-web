@@ -3,7 +3,6 @@ import {
     UserCheck,
     UserPlus,
     Building2,
-    BadgeCheck,
     Briefcase,
     BriefcaseBusiness,
     MessageSquare,

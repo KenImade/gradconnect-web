@@ -112,6 +112,8 @@ function CustomTooltip({
     if (!active || !payload?.length) return null;
 
     const point = payload[0];
+    if (!point) return null;
+
     return (
         <div className="rounded border border-admin-border bg-admin-surface px-2.5 py-1.5 shadow-sm">
             <p className="text-caption text-admin-text-dim">
