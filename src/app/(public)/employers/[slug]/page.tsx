@@ -137,7 +137,7 @@ export default async function EmployerOverviewPage({ params }: PageProps) {
                         </section>
                     )}
 
-                    {employer.offices.length > 0 && (
+                    {(employer.offices?.length ?? 0) > 0 && (
                         <section>
                             <h2 className="font-display text-heading-xl text-foreground">
                                 Offices
