@@ -2,6 +2,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -12,6 +13,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "pub-f06d7724a78745d4a91e0ea991ac9bef.r2.dev",
         pathname: "/logos/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "9000",
+        pathname: "/gradconnect-staging/**",
       },
       // Add other origins as needed (e.g. company logos from their own domains)
     ],
@@ -27,6 +34,10 @@ export default withSentryConfig(nextConfig, {
   org: "gradconnect",
 
   project: "javascript-nextjs",
+
+  sourcemaps: {
+    disable: process.env.SENTRY_DISABLE_SOURCEMAPS === "true",
+  },
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
