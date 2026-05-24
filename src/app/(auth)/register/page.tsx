@@ -17,7 +17,7 @@ export default async function RegisterPage() {
         <div>
             <div className="text-center">
                 <h1 className="font-display text-display-lg text-foreground">Create an account</h1>
-                <p className="mt-3 text-body-sm text-text-dim">Free, no credit card required.</p>
+                <p className="mt-3 text-body-sm text-text-dim">Get started on your graduate job preparation.</p>
             </div>
 
             <div className="mt-10">

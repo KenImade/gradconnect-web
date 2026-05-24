@@ -54,3 +54,23 @@ export const resetPasswordSchema = z
     });
 
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+
+export const changePasswordSchema = z
+  .object({
+    current_password: z.string().min(1, "Current password is required"),
+    new_password: z
+      .string()
+      .min(8, "New password must be at least 8 characters")
+      .max(72, "New password must not exceed 72 characters"),
+    new_password_confirm: z.string().min(1, "Please confirm your new password"),
+  })
+  .refine((data) => data.new_password === data.new_password_confirm, {
+    path: ["new_password_confirm"],
+    message: "Passwords must match",
+  })
+  .refine((data) => data.new_password !== data.current_password, {
+    path: ["new_password"],
+    message: "New password must be different from current password",
+  });
+
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
